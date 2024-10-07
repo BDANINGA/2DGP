@@ -1,2 +1,23 @@
-# 2DGP
-2D Game Programming Term Project
+#2D Game Programming Term Project
+##Title	
+---
+### 게임의 간단한 소개
+---
++ 게임 컨셉
++ 핵심 메카닉
++ 스크린 샷
+---
+### 예상 게임 실행 흐름
+---
++ 스케치 그림
++ 게임 구성
+---
+### 개발 내용
+---
++ Scene의 종류 및 구성, 전환 규칙
++ 각 Scene에 등장하는 GameObject의 종류 및 구성, 상호작용
++ 사용한/사용할 개발 기법
++ 게임 프레임워크 관련
+---
+### 일정
+---
