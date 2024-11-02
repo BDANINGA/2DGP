@@ -10,6 +10,8 @@ import time
 #     return list(map(make_rect, idxs))
 
 class Monster(Sprite):
+    dx = 1
+    flip = ' '
     def __init__(self):
         super().__init__('resource/몬스터.png', 800, 300)
         self.width, self.height = 64, 64
@@ -17,7 +19,15 @@ class Monster(Sprite):
     def handle_event(self, e):
         pass
     def update(self):
-        pass
+        if (self.x > 900):
+            self.dx = -1
+        elif (self.x < 500):
+            self.dx = 1
+        self.x += self.dx
+        if self.dx > 0:
+            self.flip = ' '
+        elif self.dx < 0:
+            self.flip = 'h'
 
     def draw(self):
-        self.image.draw(self.x, self.y)
+        self.image.composite_draw(0, self.flip, self.x, self.y)

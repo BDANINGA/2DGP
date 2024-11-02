@@ -32,6 +32,8 @@ def handle_event(e):
     if e.type == SDL_KEYDOWN and e.key == SDLK_1:
         print(world.objects)
         return
+    
+    player.handle_event(e)
 
 if __name__ == '__main__':
     gfw.start_main_module()
