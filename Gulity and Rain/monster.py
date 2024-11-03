@@ -1,6 +1,7 @@
 from pico2d import * 
 from gfw import *
 import time
+from player import Player
 
 # def make_rect(idx):
 #     x, y = idx % 100, idx // 100
@@ -46,5 +47,9 @@ class Monster(Sprite):
     def death(self):
         if self.hp <= 0:
             print("몬스터 죽음")
+            Player.gold += self.gold
+            Player.exp += self.exp
+            print("경험치 획득:",self.exp)
+            print("돈 획득:",self.gold)
             world = gfw.top().world
             world.remove(self, 2)

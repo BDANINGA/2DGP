@@ -13,10 +13,10 @@ import time
 class Player(Sprite):
    
     hp = 100
-    Atk = 10
-    Level = 1
-    Exp = 0
-    Gold = 0
+    atk = 10
+    level = 1
+    exp = 0
+    gold = 0
 
     dx = 0
     flip = ' '
@@ -82,7 +82,7 @@ class Attack(Sprite):
             if collides_box(self, monster):
                 if self.hit == False:
                     self.hit = True
-                    monster.hp -= Player.Atk
+                    monster.hp -= Player.atk
                     print("hit")
 
     
