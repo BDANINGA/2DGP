@@ -38,5 +38,13 @@ class Monster(Sprite):
         elif self.dx < 0:
             self.flip = 'h'
 
+        self.death()
+
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
+
+    def death(self):
+        if self.hp <= 0:
+            print("몬스터 죽음")
+            world = gfw.top().world
+            world.remove(self, 2)

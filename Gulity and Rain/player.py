@@ -55,6 +55,7 @@ class Attack(Sprite):
             super().__init__('resource/공격.png', playerx + 50, playery)
         self.flip = playerflip
         self.animecount = 0                 # 객체가 남아있는 시간(애니메이션 넣을 때 없어질 예정)
+        self.hit = False
 
     def handle_event(self, e):
         pass
@@ -62,14 +63,29 @@ class Attack(Sprite):
     def update(self):
         self.animecount += 1
         self.anime()
+        self.hitcheck()
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
 
     def anime(self):
         world = gfw.top().world
-        attacks = world.objects_at(world.layer.playerattacks)
-        for attack in attacks:
+        playerattacks = world.objects_at(world.layer.playerattacks)
+        for attack in playerattacks:
             if (attack.animecount > 10):
                 world.remove(attack, 3)
+
+    def hitcheck(self):
+        world = gfw.top().world
+        monsters = world.objects_at(world.layer.monster)
+        for monster in monsters:
+            if collides_box(self, monster):
+                if self.hit == False:
+                    self.hit = True
+                    monster.hp -= Player.Atk
+                    print("hit")
+
+    
+
+
     
