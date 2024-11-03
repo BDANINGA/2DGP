@@ -11,12 +11,18 @@ import time
 
 
 class Player(Sprite):
+   
+    hp = 100
+    Atk = 10
+    Level = 1
+    Exp = 0
+    Gold = 0
+
     dx = 0
     flip = ' '
     def __init__(self):
         super().__init__('resource/플레이어.png', 200, 300)
-        self.width, self.height = 64, 64
-
+    
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
             if e.key == SDLK_a:
@@ -28,6 +34,7 @@ class Player(Sprite):
                 self.dx += 1
             elif e.key ==  SDLK_d:
                 self.dx -= 1
+        
 
     def update(self):
         if self.dx > 0:
@@ -38,4 +45,31 @@ class Player(Sprite):
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
+    
 
+class Attack(Sprite):                         
+    def __init__(self, playerx, playery, playerflip):
+        if playerflip == 'h':
+            super().__init__('resource/공격.png', playerx - 50, playery)
+        else:
+            super().__init__('resource/공격.png', playerx + 50, playery)
+        self.flip = playerflip
+        self.animecount = 0                 # 객체가 남아있는 시간(애니메이션 넣을 때 없어질 예정)
+
+    def handle_event(self, e):
+        pass
+        
+    def update(self):
+        self.animecount += 1
+        self.anime()
+
+    def draw(self):
+        self.image.composite_draw(0, self.flip, self.x, self.y)
+
+    def anime(self):
+        world = gfw.top().world
+        attacks = world.objects_at(world.layer.playerattacks)
+        for attack in attacks:
+            if (attack.animecount > 10):
+                world.remove(attack, 3)
+    

@@ -2,8 +2,9 @@ from pico2d import *
 from gfw import *
 from player import Player
 from monster import Monster
+from player import Attack
 
-world = World(['bg', 'player', 'monster'])
+world = World(['bg', 'player', 'monster', 'playerattacks'])
 
 canvas_width = 1152 #1280
 canvas_height = 648 #720
@@ -16,8 +17,10 @@ def enter():
     world.append(player, world.layer.player)
 
     global monster
-    monster = Monster()
+    monster = Monster(1)
     world.append(monster, world.layer.monster)
+
+    global playerattack
 
 def exit():
     world.clear()
@@ -32,8 +35,10 @@ def handle_event(e):
     if e.type == SDL_KEYDOWN and e.key == SDLK_1:
         print(world.objects)
         return
-    
     player.handle_event(e)
+    if e.type == SDL_MOUSEBUTTONDOWN:
+            playerattack = Attack(player.x, player.y, player.flip)
+            world.append(playerattack, world.layer.playerattacks)
 
 if __name__ == '__main__':
     gfw.start_main_module()

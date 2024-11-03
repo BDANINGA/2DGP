@@ -10,11 +10,20 @@ import time
 #     return list(map(make_rect, idxs))
 
 class Monster(Sprite):
-    dx = 1
-    flip = ' '
-    def __init__(self):
+    def __init__(self, type):
         super().__init__('resource/몬스터.png', 800, 300)
         self.width, self.height = 64, 64
+        self.type = type
+        if (self.type == 1):
+            self.hp = 30
+            self.atk = 5
+            self.level = 1
+            self.gold = 10
+            self.exp = 10
+            self.dx = 1
+            self.flip = ' '
+            
+        
 
     def handle_event(self, e):
         pass
