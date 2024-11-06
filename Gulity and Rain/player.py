@@ -17,6 +17,8 @@ class Player(Sprite):
     level = 1
     exp = 0
     gold = 0
+    max_exp = 100
+    sp = 0
 
     dx = 0
     flip = ' '
@@ -42,9 +44,19 @@ class Player(Sprite):
         elif self.dx < 0:
             self.flip = 'h'
         self.x += self.dx
+        self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
+        gfw._system_font.draw(700, 600, str(self.playerinfo))
+
+    def levelupcheck(self):
+        if self.exp >= self.max_exp:
+            self.exp = self.exp - self.max_exp
+            self.level += 1
+            self.sp += 1                                    
+            self.max_exp = 100 + (self.level-1)*50              # 레벨업 기준 갱신
+            print("레벨업")
     
 
 class Attack(Sprite):                         

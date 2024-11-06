@@ -17,8 +17,9 @@ def enter():
     world.append(player, world.layer.player)
 
     global monster
-    monster = Monster(1)
-    world.append(monster, world.layer.monster)
+    for i in range(5):
+        monster = Monster(1)
+        world.append(monster, world.layer.monster)
 
     global playerattack
 

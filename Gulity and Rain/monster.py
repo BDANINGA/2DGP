@@ -20,7 +20,7 @@ class Monster(Sprite):
             self.atk = 5
             self.level = 1
             self.gold = 10
-            self.exp = 10
+            self.exp = 30
             self.dx = 1
             self.flip = ' '
             
@@ -53,3 +53,4 @@ class Monster(Sprite):
             print("돈 획득:",self.gold)
             world = gfw.top().world
             world.remove(self, 2)
+            Player.levelupcheck(Player)
