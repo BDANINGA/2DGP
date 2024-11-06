@@ -13,6 +13,7 @@ import time
 class Player(Sprite):
    
     hp = 100
+    max_hp = 100
     atk = 10
     level = 1
     exp = 0
@@ -58,6 +59,17 @@ class Player(Sprite):
             self.max_exp = 100 + (self.level-1)*50              # 레벨업 기준 갱신
             print("레벨업")
     
+    def statusup(self):
+        choice = ' '                  # 올릴 능력치를 고를 수 있다.
+        if self.sp > 0:
+            if choice == 'hp':
+                self.sp -= 1
+                self.max_hp += 50
+            elif choice == 'atk':
+                self.sp -= 1
+                self.atk += 5
+            # 올릴 능력치의 종류는 나중에 조금 더 추가할 예정(스킬 관련)
+            
 
 class Attack(Sprite):                         
     def __init__(self, playerx, playery, playerflip):
