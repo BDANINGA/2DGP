@@ -12,6 +12,19 @@ shows_bounding_box = True
 shows_object_count = True
 
 def enter():
+    world.append(InfiniteScrollBackground('resource/Layer_0011_0.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0010_1.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0009_2.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0008_3.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0007_Lights.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0006_4.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0005_5.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0004_Lights.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0003_6.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0002_7.png'), world.layer.bg)
+    world.append(InfiniteScrollBackground('resource/Layer_0001_8.png'), world.layer.bg)
+
+
     global player
     player = Player()
     world.append(player, world.layer.player)
