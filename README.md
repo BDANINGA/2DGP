@@ -195,17 +195,23 @@ UI의 구성은 대략 이렇다. 왼쪽 상단에는 레벨, HP와 같은 자�
 	+ 애니메이션 추가해야함. 추가적으로 FPS에 대해서 조금 더 알아봐야 함.
 	+ 2주차에는 스테이지 구성과 더불어 플레이어의 돈, 경험치, 레벨, 체력, 공격력을 밸런스 있게 설정해본다.
 
-+ 2주차: 
++ 2주차: Tiled로 만든 스테이지를 적용을 해보려고 시도하지만 잘 되지 않아 진행이 느리다. - 50% 완료  
 	+ 1일차
-![대략적인 스테이지 구성](https://github.com/user-attachments/assets/35b14f86-8d95-4e42-9e2d-0e2100a8ce36)
+	+ ![대략적인 스테이지 구성](https://github.com/user-attachments/assets/35b14f86-8d95-4e42-9e2d-0e2100a8ce36)
 	+ 대략적인 스테이지를 구성해보았다.
 	+ 또한 1주차 때 언급했던 돈, 경험치, 레벨, 체력, 공격력에 대해서 수정해보았다.
 	+ 2일차에는 최대한 스테이지를 모두 완성시키는 것을 목적으로 해보려고 함.
 
-![Scene 다이어그램](https://github.com/user-attachments/assets/927ab2a4-5a3f-4e95-b8e6-311071d9720f)
+	+ ![Scene 다이어그램](https://github.com/user-attachments/assets/927ab2a4-5a3f-4e95-b8e6-311071d9720f)
 	+ Scene 상태 다이어그램도 그렸지만, 현재 완성시킬 수는 없었다.
 	+ Stage를 Scene으로 관리하는 것이 맞는 지 확실하게 알 수 없고,
 	+ save, load의 기능도 함께 생각해보아야 한다. 조금 더 고민을 해봐야 함.
+
+	+ 2일차
+	+ 배경을 넣어보았고, Tiled로 10개 정도의 스테이지를 그려보았다.
+	+ Tiled로 만든 tmx 파일을 적용하는 방법 혹은 다른 방법을 계속 연구 중
+	+ ![제목 없음](https://github.com/user-attachments/assets/9582e37d-8010-4f5f-b537-0378c8658e83)
+
 + 3주차:
 + 4주차:
 
