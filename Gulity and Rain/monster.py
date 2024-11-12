@@ -12,8 +12,8 @@ from player import Player
 
 class Monster(Sprite):
     def __init__(self, type):
-        super().__init__('resource/몬스터.png', 800, 300)
-        self.width, self.height = 64, 64
+        super().__init__('resource/몬스터.png', 800, 64)
+        self.width, self.height = 32, 32
         self.type = type
         if (self.type == 1):
             self.hp = 30
@@ -52,5 +52,5 @@ class Monster(Sprite):
             print("경험치 획득:",self.exp)
             print("돈 획득:",self.gold)
             world = gfw.top().world
-            world.remove(self, 2)
+            world.remove(self, world.layer.monster)
             Player.levelupcheck(Player)

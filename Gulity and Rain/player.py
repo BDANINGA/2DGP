@@ -24,7 +24,8 @@ class Player(Sprite):
     dx = 0
     flip = ' '
     def __init__(self):
-        super().__init__('resource/플레이어.png', 200, 300)
+        super().__init__('resource/플레이어.png', 200, 64)
+        self.width, self.height = 32, 32
     
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
@@ -97,7 +98,7 @@ class Attack(Sprite):
         playerattacks = world.objects_at(world.layer.playerattacks)
         for attack in playerattacks:
             if (attack.animecount > 10):
-                world.remove(attack, 3)
+                world.remove(attack, world.layer.playerattacks)
 
     def hitcheck(self):
         world = gfw.top().world

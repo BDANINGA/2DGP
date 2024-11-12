@@ -3,27 +3,20 @@ from gfw import *
 from player import Player
 from monster import Monster
 from player import Attack
+from floor import TileMap
 
-world = World(['bg', 'player', 'monster', 'playerattacks'])
+world = World(['bg', 'floor', 'player', 'monster', 'playerattacks'])
 
-canvas_width = 1152 #1280
-canvas_height = 648 #720
+canvas_width = 1280
+canvas_height = 720 
 shows_bounding_box = True
 shows_object_count = True
 
 def enter():
-    world.append(InfiniteScrollBackground('resource/Layer_0011_0.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0010_1.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0009_2.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0008_3.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0007_Lights.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0006_4.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0005_5.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0004_Lights.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0003_6.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0002_7.png'), world.layer.bg)
-    world.append(InfiniteScrollBackground('resource/Layer_0001_8.png'), world.layer.bg)
+    world.append(VertFillBackground('resource/Background.png'), world.layer.bg)
 
+    #tile_map = TileMap('resource/stage10.tmx', 'resource/oak_woods_tileset.png')
+    #world.append(tile_map, world.layer.floor)
 
     global player
     player = Player()
