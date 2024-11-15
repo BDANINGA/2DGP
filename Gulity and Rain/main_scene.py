@@ -7,27 +7,34 @@ from floor import TileMap
 
 world = World(['bg', 'floor', 'player', 'monster', 'playerattacks'])
 
-canvas_width = 1280
+canvas_width = 1200
 canvas_height = 720 
 shows_bounding_box = True
 shows_object_count = True
 
 def enter():
-    world.append(VertFillBackground('resource/Background.png'), world.layer.bg)
 
-    #tile_map = TileMap('resource/stage10.tmx', 'resource/oak_woods_tileset.png')
-    #world.append(tile_map, world.layer.floor)
+    global bg 
+    bg = VertFillBackground('resource/Background.png')
+    world.append(bg, world.layer.bg)
+    # 나중에 레이어로 개별로 만들어서 스크롤링을 해볼 예정
+
+    # 스테이지
+    tile_map = TileMap('resource/stage1.tmx', 'resource/oak_woods_tileset.png')
+    world.append(tile_map, world.layer.floor)
 
     global player
     player = Player()
     world.append(player, world.layer.player)
 
+    global playerattack
+
     global monster
     for i in range(5):
-        monster = Monster(1)
+        monster = Monster(type=1)
         world.append(monster, world.layer.monster)
 
-    global playerattack
+    
 
 def exit():
     world.clear()

@@ -11,22 +11,20 @@ import time
 
 
 class Player(Sprite):
-   
-    hp = 100
-    max_hp = 100
-    atk = 10
-    level = 1
-    exp = 0
-    gold = 0
-    max_exp = 100
-    sp = 0
-
-    dx = 0
-    flip = ' '
     def __init__(self):
-        super().__init__('resource/플레이어.png', 200, 64)
+        super().__init__('resource/플레이어.png', 200, 48)
         self.width, self.height = 32, 32
-    
+        self.hp =100
+        self.max_hp = 100
+        self.atk = 10
+        self.level = 1
+        self.exp = 0
+        self.gold = 0
+        self.max_exp = 100
+        self.sp = 0
+        self.dx = 0
+        self.flip = ' '
+
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
             if e.key == SDLK_a:
@@ -103,12 +101,14 @@ class Attack(Sprite):
     def hitcheck(self):
         world = gfw.top().world
         monsters = world.objects_at(world.layer.monster)
+        players = world.objects_at(world.layer.player)
         for monster in monsters:
-            if collides_box(self, monster):
-                if self.hit == False:
-                    self.hit = True
-                    monster.hp -= Player.atk
-                    print("hit")
+            for player in players:
+                if collides_box(self, monster):
+                    if self.hit == False:
+                        self.hit = True
+                        monster.hp -= player.atk
+                        print("hit")
 
     
 
