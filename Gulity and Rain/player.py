@@ -12,7 +12,7 @@ import time
 
 class Player(Sprite):
     def __init__(self):
-        super().__init__('resource/플레이어.png', 200, 48)
+        super().__init__('resource/플레이어.png', 200, 50)
         self.width, self.height = 32, 32
         self.hp =100
         self.max_hp = 100
@@ -23,6 +23,7 @@ class Player(Sprite):
         self.max_exp = 100
         self.sp = 0
         self.dx = 0
+        self.dy = 0
         self.flip = ' '
 
     def handle_event(self, e):
@@ -31,6 +32,8 @@ class Player(Sprite):
                 self.dx -= 1
             elif e.key == SDLK_d:
                 self.dx += 1
+            elif e.key == SDLK_SPACE:
+                self.dy = 3
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
                 self.dx += 1
@@ -43,7 +46,22 @@ class Player(Sprite):
             self.flip = ' '
         elif self.dx < 0:
             self.flip = 'h'
+        
         self.x += self.dx
+        self.y += self.dy
+
+        world = gfw.top().world
+        floors = world.objects_at(world.layer.floor)
+        for floor in floors:
+            if collides_box(self, floor):
+                self.dy = 0
+                break
+            else:
+                self.dy -= 0.001
+
+        self.dy -= 0.001
+        
+        
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
     def draw(self):

@@ -20,8 +20,7 @@ def enter():
     # 나중에 레이어로 개별로 만들어서 스크롤링을 해볼 예정
 
     # 스테이지
-    tile_map = TileMap('resource/stage1.tmx', 'resource/oak_woods_tileset.png')
-    world.append(tile_map, world.layer.floor)
+    TileMap('resource/stage1.tmx', 'resource/oak_woods_tileset.png')
 
     global player
     player = Player()
