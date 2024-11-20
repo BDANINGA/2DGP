@@ -60,10 +60,8 @@ def create_tile_object(tile_id, x, y, width, height, tileset_image, tileset_colu
 
 class Tile(Sprite):
     def __init__(self, tile_id, x, y, width, height, tileset_image, tileset_columns):
-        super().__init__('resource/oak_woods_tileset.png', x, y)
+        super().__init__('resource/oak_woods_tileset.png', x + width // 2, y + height//2)
         self.tile_id = tile_id
-        self.x = x
-        self.y = y
         self.width = width
         self.height = height
         self.tileset_image = tileset_image

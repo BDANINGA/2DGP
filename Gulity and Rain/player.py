@@ -21,6 +21,10 @@ class Player(Sprite):
         self.state = 'wait'
         self.doublejump = True
 
+        # 충돌처리
+        self.rightblock = False
+        self.leftblock = False
+
         self.hp =100
         self.max_hp = 100
         self.atk = 10
@@ -62,15 +66,83 @@ class Player(Sprite):
 
         self.dy -= 10
         
+        if self.rightblock == True:
+            self.rightblock = False
+            self.dx += 200
+
+        if self.leftblock == True:
+            self.leftblock = False
+            self.dx -= 200
+
+        # floor와의 충돌처리
         world = gfw.top().world
         floors = world.objects_at(world.layer.floor)
         for floor in floors:
-            if (self.dy < 0):
-                if collides_box(self, floor):
+            if collides_box(self, floor):
+                if floor.tile_id == 0 or floor.tile_id == 21 or floor.tile_id == 42 or floor.tile_id == 63:
+                    if floor.tile_id == 0:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x <= floor.x:
+                            self.dx = 0
+                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x + self.width // 2 <= floor.x:
+                        self.dx = 0
+                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                    
+
+                elif floor.tile_id == 3 or floor.tile_id == 24 or floor.tile_id == 45 or floor.tile_id == 66:
+                    if floor.tile_id == 3:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x - self.width // 2 >= floor.x:
+                            self.dx = 0
+                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x - self.width // 2 >= floor.x:
+                        self.dx = 0
+                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                elif floor.tile_id == 48 or floor.tile_id == 90:
+                    if floor.tile_id == 48:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x <= floor.x:
+                            self.dx = 0
+                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                        elif self.x - self.width // 2 >= floor.x:
+                            self.dx = 0
+                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x + self.width // 2 <= floor.x:
+                        self.dx = 0
+                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                    elif self.x - self.width // 2 >= floor.x:
+                        self.dx = 0
+                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                elif self.dy < 0:
                     self.dy = 0
-                    self.y = floor.y + floor.height
+                    self.y = floor.y + floor.height//2 + self.height//2
                     self.state = 'wait'
-                    break
+                    
+        
+        # stage 전환
         world = gfw.top().world
         stages = world.objects_at(world.layer.stage)
         for stage in stages:

@@ -67,7 +67,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, Inf, 1150)
+            self.player_start_x = (1150, 50, Inf, 50)
             self.player_start_y = (70, 144, Inf, 264)
 
          elif self.index == 6:   
@@ -92,12 +92,12 @@ class Stage():
          elif self.index == 8:   
             TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png')
             self.gate_x = (left, right, left, Inf)
-            self.gate_y = (312, 432, 432, Inf)
+            self.gate_y = (168, 312, 312, Inf)
 
             self.gate_count = 4
 
             self.player_start_x = (1150, 50, 1150, Inf)
-            self.player_start_y = (312, 432, 432, Inf)
+            self.player_start_y = (168, 168, 312, Inf)
 
          # 여기서부터 다시 해야함
          elif self.index == 9:   
