@@ -12,7 +12,7 @@ import time
 
 class Player(Sprite):
     def __init__(self):
-        super().__init__('resource/플레이어.png', 200, 50)
+        super().__init__('resource/플레이어.png', 200, 100)
         self.width, self.height = 32, 32
         self.hp =100
         self.max_hp = 100
@@ -29,16 +29,16 @@ class Player(Sprite):
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
             if e.key == SDLK_a:
-                self.dx -= 1
+                self.dx -= 200
             elif e.key == SDLK_d:
-                self.dx += 1
+                self.dx += 200
             elif e.key == SDLK_SPACE:
-                self.dy = 3
+                self.dy = 500
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
-                self.dx += 1
+                self.dx += 200
             elif e.key ==  SDLK_d:
-                self.dx -= 1
+                self.dx -= 200
         
 
     def update(self):
@@ -47,20 +47,19 @@ class Player(Sprite):
         elif self.dx < 0:
             self.flip = 'h'
         
-        self.x += self.dx
-        self.y += self.dy
+        self.x += self.dx * gfw.frame_time
+        self.y += self.dy * gfw.frame_time
 
+        self.dy -= 10
+        
         world = gfw.top().world
         floors = world.objects_at(world.layer.floor)
         for floor in floors:
-            if collides_box(self, floor):
-                self.dy = 0
-                break
-            else:
-                self.dy -= 0.001
-
-        self.dy -= 0.001
-        
+            if (self.dy < 0):
+                if collides_box(self, floor):
+                    self.dy = 0
+                    self.y = floor.y + floor.height
+                    break
         
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
