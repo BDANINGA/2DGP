@@ -3,9 +3,9 @@ from gfw import *
 from player import Player
 from monster import Monster
 from player import Attack
-from floor import TileMap
+from stage import Stage
 
-world = World(['bg', 'floor', 'player', 'monster', 'playerattacks'])
+world = World(['bg','stage', 'floor', 'player', 'monster', 'playerattacks'])
 
 canvas_width = 1200
 canvas_height = 720 
@@ -20,7 +20,9 @@ def enter():
     # 나중에 레이어로 개별로 만들어서 스크롤링을 해볼 예정
 
     # 스테이지
-    TileMap('resource/stage01.tmx', 'resource/oak_woods_tileset.png')
+    global stage
+    stage = Stage(1)
+    world.append(stage, world.layer.stage)
 
     global player
     player = Player()
@@ -45,13 +47,21 @@ def resume():
     print('[main.resume()]')
 
 def handle_event(e):
-    if e.type == SDL_KEYDOWN and e.key == SDLK_1:
-        print(world.objects)
-        return
     player.handle_event(e)
     if e.type == SDL_MOUSEBUTTONDOWN:
             playerattack = Attack(player.x, player.y, player.flip)
             world.append(playerattack, world.layer.playerattacks)
+    # debug
+    if e.type == SDL_KEYDOWN:
+        if e.key == SDLK_1:
+            stage.change = True
+            stage.index += 1
+        elif e.key == SDLK_2:
+            stage.change = True
+            stage.index -= 1
+        elif e.key == SDLK_3:
+            print(player.x)
+            print(player.y)
 
 if __name__ == '__main__':
     gfw.start_main_module()

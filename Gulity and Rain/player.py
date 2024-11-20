@@ -14,6 +14,13 @@ class Player(Sprite):
     def __init__(self):
         super().__init__('resource/플레이어.png', 200, 100)
         self.width, self.height = 32, 32
+        self.dx = 0
+        self.dy = 0
+        self.flip = ' '
+
+        self.state = 'wait'
+        self.doublejump = True
+
         self.hp =100
         self.max_hp = 100
         self.atk = 10
@@ -22,9 +29,6 @@ class Player(Sprite):
         self.gold = 0
         self.max_exp = 100
         self.sp = 0
-        self.dx = 0
-        self.dy = 0
-        self.flip = ' '
 
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
@@ -33,7 +37,13 @@ class Player(Sprite):
             elif e.key == SDLK_d:
                 self.dx += 200
             elif e.key == SDLK_SPACE:
-                self.dy = 500
+                if self.state != 'jump' or self.state != 'doublejump':
+                    if self.state != 'doublejump':
+                        if self.doublejump == True and self.state == 'jump':
+                            self.state = 'doublejump'
+                        else:
+                            self.state = 'jump'
+                        self.dy = 400  
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
                 self.dx += 200
@@ -59,7 +69,29 @@ class Player(Sprite):
                 if collides_box(self, floor):
                     self.dy = 0
                     self.y = floor.y + floor.height
+                    self.state = 'wait'
                     break
+        world = gfw.top().world
+        stages = world.objects_at(world.layer.stage)
+        for stage in stages:
+            for i in range(stage.gate_count):
+                if i % 2 == 0:
+                    if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        stage.change = True
+                        self.x = stage.player_start_x[i]
+                        self.y = stage.player_start_y[i]
+                        stage.index -= 1
+                elif i % 2 == 1:
+                    if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        stage.change = True
+                        self.x = stage.player_start_x[i]
+                        self.y = stage.player_start_y[i]
+                        stage.index += 1
+                
+                    
+                        
+                   
+                       
         
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
