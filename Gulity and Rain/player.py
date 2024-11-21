@@ -17,6 +17,8 @@ class Player(Sprite):
         self.dx = 0
         self.dy = 0
         self.flip = ' '
+        self.cx = 0
+        self.cy = 0
 
         self.state = 'wait'
         self.doublejump = True
@@ -60,8 +62,21 @@ class Player(Sprite):
             self.flip = ' '
         elif self.dx < 0:
             self.flip = 'h'
-        
-        self.x += self.dx * gfw.frame_time
+
+        world = gfw.top().world
+        stages = world.objects_at(world.layer.stage)
+
+        if self.x >= get_canvas_width() // 2:
+            for stage in stages:
+                if self.dx > 0 and self.cx < stage.stage_width:
+                    self.cx += self.dx * gfw.frame_time
+                elif self.dx < 0 and self.cx >= 0:
+                    self.cx += self.dx * gfw.frame_time
+                else:
+                    self.x += self.dx * gfw.frame_time
+        else:
+            self.x += self.dx * gfw.frame_time
+                
         self.y += self.dy * gfw.frame_time
 
         self.dy -= 10
@@ -117,12 +132,14 @@ class Player(Sprite):
                         self.x = stage.player_start_x[i]
                         self.y = stage.player_start_y[i]
                         stage.index -= 1
+                        self.cx = 0
                 elif i % 2 == 1:
                     if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
                         stage.change = True
                         self.x = stage.player_start_x[i]
                         self.y = stage.player_start_y[i]
                         stage.index += 1
+                        self.cx = 0
 
     def collides_floor(self):
         world = gfw.top().world

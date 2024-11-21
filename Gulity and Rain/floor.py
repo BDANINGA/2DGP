@@ -71,6 +71,8 @@ class Tile(Sprite):
         self.height = height
         self.tileset_image = tileset_image
         self.tileset_columns = tileset_columns
+        self.ox = self.x
+        self.oy = self.y
 
     def draw(self):
         # 타일셋에서 타일의 위치 계산
@@ -82,4 +84,7 @@ class Tile(Sprite):
             tile_x, tile_y, self.width, self.height, self.x, self.y
         )
     def update(self):
-        pass
+        world = gfw.top().world
+        players = world.objects_at(world.layer.player)
+        for player in players:
+            self.x = self.ox - player.cx

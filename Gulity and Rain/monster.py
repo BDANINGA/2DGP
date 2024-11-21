@@ -32,9 +32,9 @@ class Monster(Sprite):
     def handle_event(self, e):
         pass
     def update(self):
-        if (self.x > self.x - 300):
+        if (self.x > self.x - 100):
             self.dx = -100
-        elif (self.x < self.x + 300):
+        elif (self.x < self.x + 100):
             self.dx = 100
         
         if self.dx > 0:
@@ -44,6 +44,13 @@ class Monster(Sprite):
         
         self.x += self.dx * gfw.frame_time
         self.y += self.dy * gfw.frame_time
+
+        self.ox = self.x
+
+        world = gfw.top().world
+        players = world.objects_at(world.layer.player)
+        for player in players:
+            self.x = self.ox - player.cx * gfw.frame_time
 
         self.dy -= 10
         
