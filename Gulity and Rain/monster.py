@@ -10,8 +10,8 @@ import time
 #     return list(map(make_rect, idxs))
 
 class Monster(Sprite):
-    def __init__(self, type):
-        super().__init__('resource/몬스터.png', 800, 48)
+    def __init__(self, type, x, y, width, height):
+        super().__init__('resource/몬스터.png', x + width//2 , y + height//2)
         self.width, self.height = 32, 32
         self.type = type
         if (self.type == 1):
@@ -22,23 +22,41 @@ class Monster(Sprite):
             self.exp = 30
             self.dx = 1
             self.flip = ' '
-            
-        
+            self.dy = 0
+
+            self.rightblock = False
+            self.leftblock = False
+
+            self.state = 'wait'        
 
     def handle_event(self, e):
         pass
     def update(self):
-        if (self.x > 900):
-            self.dx = -1
-        elif (self.x < 500):
-            self.dx = 1
-        self.x += self.dx
+        if (self.x > self.x - 300):
+            self.dx = -100
+        elif (self.x < self.x + 300):
+            self.dx = 100
+        
         if self.dx > 0:
             self.flip = ' '
         elif self.dx < 0:
             self.flip = 'h'
+        
+        self.x += self.dx * gfw.frame_time
+        self.y += self.dy * gfw.frame_time
+
+        self.dy -= 10
+        
+        if self.rightblock == True:
+            self.rightblock = False
+            self.dx += 200
+
+        if self.leftblock == True:
+            self.leftblock = False
+            self.dx -= 200
 
         self.death()
+        self.collides_floor()
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
@@ -55,3 +73,71 @@ class Monster(Sprite):
                 print("돈 획득:",self.gold)
                 world.remove(self, world.layer.monster)
                 player.levelupcheck()
+
+    def collides_floor(self):
+        world = gfw.top().world
+        floors = world.objects_at(world.layer.floor)
+        for floor in floors:
+            if collides_box(self, floor):
+                if floor.tile_id == 0 or floor.tile_id == 21 or floor.tile_id == 42 or floor.tile_id == 63:
+                    if floor.tile_id == 0:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x <= floor.x:
+                            self.dx = 0
+                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x + self.width // 2 <= floor.x:
+                        self.dx = 0
+                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                    
+
+                elif floor.tile_id == 3 or floor.tile_id == 24 or floor.tile_id == 45 or floor.tile_id == 66:
+                    if floor.tile_id == 3:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x - self.width // 2 >= floor.x:
+                            self.dx = 0
+                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x - self.width // 2 >= floor.x:
+                        self.dx = 0
+                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                elif floor.tile_id == 48 or floor.tile_id == 90:
+                    if floor.tile_id == 48:
+                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
+                            if self.dy < 0:
+                                self.dy = 0
+                                self.y = floor.y + floor.height//2 + self.height//2
+                                self.state = 'wait'
+
+                        elif self.x <= floor.x:
+                            self.dx = 0
+                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                        elif self.x - self.width // 2 >= floor.x:
+                            self.dx = 0
+                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+
+                    elif self.x + self.width // 2 <= floor.x:
+                        self.dx = 0
+                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                    elif self.x - self.width // 2 >= floor.x:
+                        self.dx = 0
+                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                        
+                elif self.dy < 0:
+                    self.dy = 0
+                    self.y = floor.y + floor.height//2 + self.height//2
+                    self.state = 'wait'
+    

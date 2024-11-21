@@ -30,12 +30,6 @@ def enter():
 
     global playerattack
 
-    global monster
-    for i in range(5):
-        monster = Monster(type=1)
-        world.append(monster, world.layer.monster)
-
-    
 
 def exit():
     world.clear()

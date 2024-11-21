@@ -75,6 +75,56 @@ class Player(Sprite):
             self.dx -= 200
 
         # floor와의 충돌처리
+        self.collides_floor()    
+        
+        # stage 전환               
+        self.change_stage()
+
+        # player 정보
+        self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
+
+    def draw(self):
+        self.image.composite_draw(0, self.flip, self.x, self.y)
+        gfw._system_font.draw(700, 600, str(self.playerinfo))
+
+    def levelupcheck(self):
+        if self.exp >= self.max_exp:
+            self.exp = self.exp - self.max_exp
+            self.level += 1
+            self.sp += 1                                    
+            self.max_exp = 100 + (self.level-1)*50              # 레벨업 기준 갱신
+            print("레벨업")
+    
+    def statusup(self):
+        choice = ' '                  # 올릴 능력치를 고를 수 있다.
+        if self.sp > 0:
+            if choice == 'hp':
+                self.sp -= 1
+                self.max_hp += 50
+            elif choice == 'atk':
+                self.sp -= 1
+                self.atk += 5
+            # 올릴 능력치의 종류는 나중에 조금 더 추가할 예정(스킬 관련)
+
+    def change_stage(self):
+        world = gfw.top().world
+        stages = world.objects_at(world.layer.stage)
+        for stage in stages:
+            for i in range(stage.gate_count):
+                if i % 2 == 0:
+                    if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        stage.change = True
+                        self.x = stage.player_start_x[i]
+                        self.y = stage.player_start_y[i]
+                        stage.index -= 1
+                elif i % 2 == 1:
+                    if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        stage.change = True
+                        self.x = stage.player_start_x[i]
+                        self.y = stage.player_start_y[i]
+                        stage.index += 1
+
+    def collides_floor(self):
         world = gfw.top().world
         floors = world.objects_at(world.layer.floor)
         for floor in floors:
@@ -140,55 +190,6 @@ class Player(Sprite):
                     self.dy = 0
                     self.y = floor.y + floor.height//2 + self.height//2
                     self.state = 'wait'
-                    
-        
-        # stage 전환
-        world = gfw.top().world
-        stages = world.objects_at(world.layer.stage)
-        for stage in stages:
-            for i in range(stage.gate_count):
-                if i % 2 == 0:
-                    if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
-                        stage.change = True
-                        self.x = stage.player_start_x[i]
-                        self.y = stage.player_start_y[i]
-                        stage.index -= 1
-                elif i % 2 == 1:
-                    if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
-                        stage.change = True
-                        self.x = stage.player_start_x[i]
-                        self.y = stage.player_start_y[i]
-                        stage.index += 1
-                
-                    
-                        
-                   
-                       
-        
-        self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
-
-    def draw(self):
-        self.image.composite_draw(0, self.flip, self.x, self.y)
-        gfw._system_font.draw(700, 600, str(self.playerinfo))
-
-    def levelupcheck(self):
-        if self.exp >= self.max_exp:
-            self.exp = self.exp - self.max_exp
-            self.level += 1
-            self.sp += 1                                    
-            self.max_exp = 100 + (self.level-1)*50              # 레벨업 기준 갱신
-            print("레벨업")
-    
-    def statusup(self):
-        choice = ' '                  # 올릴 능력치를 고를 수 있다.
-        if self.sp > 0:
-            if choice == 'hp':
-                self.sp -= 1
-                self.max_hp += 50
-            elif choice == 'atk':
-                self.sp -= 1
-                self.atk += 5
-            # 올릴 능력치의 종류는 나중에 조금 더 추가할 예정(스킬 관련)
             
 
 class Attack(Sprite):                         

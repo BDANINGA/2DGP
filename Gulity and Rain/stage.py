@@ -17,11 +17,14 @@ class Stage():
       if self.change:
          world = gfw.top().world
          floors =  world.objects_at(world.layer.floor)
+         monsters = world.objects_at(world.layer.monster)
          for floor in floors:
             world.remove(floor, world.layer.floor)
+         for monster in monsters:
+            world.remove(monster, world.layer.monster)
 
          if self.index == 1:
-            TileMap('resource/stage01.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage01.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (Inf, 1200)
             self.gate_y = (Inf, 50)
 
@@ -31,7 +34,7 @@ class Stage():
             self.player_start_y = (Inf, 70)
 
          elif self.index == 2:   
-            TileMap('resource/stage02.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage02.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right)
             self.gate_y = (50, 50)
 
@@ -41,7 +44,7 @@ class Stage():
             self.player_start_y = (70, 70)
 
          elif self.index == 3:   
-            TileMap('resource/stage03.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage03.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right)
             self.gate_y = (50, 50)
 
@@ -51,7 +54,7 @@ class Stage():
             self.player_start_y = (70, 70)
 
          elif self.index == 4:   
-            TileMap('resource/stage04.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage04.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right)
             self.gate_y = (50, 50)
 
@@ -61,7 +64,7 @@ class Stage():
             self.player_start_y = (70, 70)
 
          elif self.index == 5:   
-            TileMap('resource/stage05.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage05.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, Inf, right)
             self.gate_y = (50, 144, Inf, 264)
 
@@ -71,7 +74,7 @@ class Stage():
             self.player_start_y = (70, 144, Inf, 264)
 
          elif self.index == 6:   
-            TileMap('resource/stage06.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage06.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, left, Inf)
             self.gate_y = (144, 432, 264, Inf)
 
@@ -81,7 +84,7 @@ class Stage():
             self.player_start_y = (144, 432, 264, Inf)
 
          elif self.index == 7:   
-            TileMap('resource/stage07.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage07.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, Inf, right)
             self.gate_y = (432, 168, Inf, 312)
 
@@ -90,7 +93,7 @@ class Stage():
             self.player_start_x = (1150, 50, Inf, 50)
             self.player_start_y = (432, 168, Inf, 312)
          elif self.index == 8:   
-            TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, left, Inf)
             self.gate_y = (168, 312, 312, Inf)
 
@@ -101,7 +104,7 @@ class Stage():
 
          # 여기서부터 다시 해야함
          elif self.index == 9:   
-            TileMap('resource/stage09.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage09.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, left, Inf)
             self.gate_y = (312, 432, 432, Inf)
 
@@ -111,7 +114,7 @@ class Stage():
             self.player_start_y = (312, 432, 432, Inf)
 
          elif self.index == 10:   
-            TileMap('resource/stage10.tmx', 'resource/oak_woods_tileset.png')
+            TileMap('resource/stage10.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
             self.gate_x = (left, right, Inf, right)
             self.gate_y = (432, 168, Inf, 312)
 

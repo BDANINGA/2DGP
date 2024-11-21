@@ -1,9 +1,10 @@
 import xml.etree.ElementTree as ET
 from gfw import *
 from pico2d import *
+from monster import Monster
 
 class TileMap():
-    def __init__(self, tmx_file, tileset_image):
+    def __init__(self, tmx_file, tileset_image, tileset_image2):
         # TMX 파일 파싱
         self.tree = ET.parse(tmx_file)
         self.root = self.tree.getroot()
@@ -17,6 +18,7 @@ class TileMap():
         
         # 타일셋 이미지 로드
         self.tileset_image = load_image(tileset_image)
+        self.tileset_image2 = load_image(tileset_image2)
         
         # 타일셋 이미지 속성 (타일 크기와 행, 열 개수 계산)
         self.tileset_columns = self.tileset_image.w // self.tile_width
@@ -40,20 +42,23 @@ class TileMap():
             layer_objects = []
             for index, tile_id in enumerate(layer_data):
                 if tile_id < 0:
-                    continue  # 빈 타일은 객체를 생성하지 않음
-                
+                    continue  # 빈 타일은 객체를 생성하지 않음    
+
                 # 타일의 위치 계산
                 x = (index % self.map_width) * self.tile_width
                 y = (self.map_height - 1 - (index // self.map_width)) * self.tile_height
                 
                 # 타일 객체 생성
                 world = gfw.top().world
-                tile_object = self.create_tile_object(tile_id, x, y, self.tile_width, self.tile_height, self.tileset_image, self.tileset_columns)
-                world.append(tile_object, world.layer.floor)
-                layer_objects.append(tile_object)
-            self.tile_objects.append(layer_objects)
-            print(layer_objects)
 
+                if tile_id >= 315:
+                    self.monster = Monster(type=1, x=x, y=y, width = 32, height=32)
+                    world.append(self.monster, world.layer.monster)
+                else:
+                    tile_object = self.create_tile_object(tile_id, x, y, self.tile_width, self.tile_height, self.tileset_image, self.tileset_columns)
+                    world.append(tile_object, world.layer.floor)
+                    layer_objects.append(tile_object)
+            self.tile_objects.append(layer_objects)
 
 def create_tile_object(tile_id, x, y, width, height, tileset_image, tileset_columns):
     return Tile(tile_id, x, y, width, height, tileset_image, tileset_columns)
