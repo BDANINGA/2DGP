@@ -42,7 +42,7 @@ class World:
                   r,t = self.bg.to_screen(r,t)
                 draw_rectangle(l,b,r,t)
         if gfw.shows_object_count and gfw._system_font is not None:
-            gfw._system_font.draw(10, 20, str(list(map(len, self.objects))) + ' ' + str(self.count()))
+            gfw._system_font.draw(10, 600, str(list(map(len, self.objects))) + ' ' + str(self.count()))
 
     def all_objects(self):
         for objs in self.objects:
