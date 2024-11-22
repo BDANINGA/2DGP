@@ -128,3 +128,5 @@ class Stage():
          self.stage_height = self.stage.map_height * self.stage.tile_width - get_canvas_height()
 
          self.change = False
+
+

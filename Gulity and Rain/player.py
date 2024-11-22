@@ -58,6 +58,22 @@ class Player(Sprite):
         
 
     def update(self):
+        self.move()
+
+        # floor와의 충돌처리
+        self.collides_floor()    
+        
+        # stage 전환               
+        self.change_stage()
+
+        # player 정보
+        self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
+
+    def draw(self):
+        self.image.composite_draw(0, self.flip, self.x, self.y)
+        gfw._system_font.draw(700, 600, str(self.playerinfo))
+
+    def move(self):
         if self.dx > 0:
             self.flip = ' '
         elif self.dx < 0:
@@ -88,19 +104,6 @@ class Player(Sprite):
         if self.leftblock == True:
             self.leftblock = False
             self.dx -= 200
-
-        # floor와의 충돌처리
-        self.collides_floor()    
-        
-        # stage 전환               
-        self.change_stage()
-
-        # player 정보
-        self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
-
-    def draw(self):
-        self.image.composite_draw(0, self.flip, self.x, self.y)
-        gfw._system_font.draw(700, 600, str(self.playerinfo))
 
     def levelupcheck(self):
         if self.exp >= self.max_exp:
