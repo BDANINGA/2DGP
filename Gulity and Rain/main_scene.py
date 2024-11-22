@@ -1,7 +1,6 @@
 from pico2d import * 
 from gfw import *
 from player import Player
-from monster import Monster
 from player import Attack
 from stage import Stage
 
@@ -13,12 +12,6 @@ shows_bounding_box = True
 shows_object_count = True
 
 def enter():
-
-    global bg 
-    bg = VertFillBackground('resource/Background.png')
-    world.append(bg, world.layer.bg)
-    # 나중에 레이어로 개별로 만들어서 스크롤링을 해볼 예정
-
     # 스테이지
     global stage
     stage = Stage(1)

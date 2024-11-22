@@ -81,13 +81,44 @@ class Player(Sprite):
 
         world = gfw.top().world
         stages = world.objects_at(world.layer.stage)
+        bgs = world.objects_at(world.layer.bg)
 
         if self.x >= get_canvas_width() // 2:
             for stage in stages:
                 if self.dx > 0 and self.cx < stage.stage_width:
                     self.cx += self.dx * gfw.frame_time
+                    i=0
+                    for bg in bgs:
+                        if i >= 0 and i <= 3:
+                            bg.scroll = -self.cx // 1.5
+                        elif i == 4 or i == 5:
+                            bg.scroll = -self.cx // 2
+                        elif i == 6 or i == 7:
+                            bg.scroll = -self.cx // 2.5
+                        elif i == 8:
+                            bg.scroll = -self.cx // 3
+                        elif i == 9:
+                            bg.scroll = -self.cx // 3.5
+                        elif i == 10 or i == 11:
+                            bg.scroll = -self.cx
+                        i += 1
                 elif self.dx < 0 and self.cx >= 0:
                     self.cx += self.dx * gfw.frame_time
+                    i=0
+                    for bg in bgs:
+                        if i >= 0 and i <= 3:
+                            bg.scroll = -self.cx // 1.5
+                        elif i == 4 or i == 5:
+                            bg.scroll = -self.cx // 2
+                        elif i == 6 or i == 7:
+                            bg.scroll = -self.cx // 2.5
+                        elif i == 8:
+                            bg.scroll = -self.cx // 3
+                        elif i == 9:
+                            bg.scroll = -self.cx // 3.5
+                        elif i == 10 or i == 11:
+                            bg.scroll = -self.cx
+                        i += 1
                 else:
                     self.x += self.dx * gfw.frame_time
         else:
@@ -135,7 +166,7 @@ class Player(Sprite):
                         self.x = stage.player_start_x[i]
                         self.y = stage.player_start_y[i]
                         stage.index -= 1
-                        self.cx = 0
+                        self.cx = stage.undostage_width
                 elif i % 2 == 1:
                     if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
                         stage.change = True
