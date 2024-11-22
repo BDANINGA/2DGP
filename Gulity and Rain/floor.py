@@ -17,8 +17,8 @@ class TileMap():
         self.tile_height = int(map_info['tileheight']) # 각 타일의 세로 크기
         
         # 타일셋 이미지 로드
-        self.tileset_image = load_image(tileset_image)
-        self.tileset_image2 = load_image(tileset_image2)
+        self.tileset_image = gfw.image.load(tileset_image)
+        self.tileset_image2 = gfw.image.load(tileset_image2)
         
         # 타일셋 이미지 속성 (타일 크기와 행, 열 개수 계산)
         self.tileset_columns = self.tileset_image.w // self.tile_width

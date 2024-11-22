@@ -3,7 +3,7 @@ from gfw import *
 from floor import TileMap
 import gfw.world
 
-Inf = 10000000
+Inf = float('inf')
 left = 0
 right = 1200
 
