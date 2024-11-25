@@ -12,7 +12,7 @@ shows_bounding_box = True
 shows_object_count = True
 
 def enter():
-    # 스테이지
+
     global stage
     stage = Stage(1)
     world.append(stage, world.layer.stage)
@@ -23,6 +23,13 @@ def enter():
 
     global playerattack
 
+    # 타이틀 화면, 일시정지 화면 생성
+    # 스킬 구현(회피, 올려베기)
+    # 아이템 구현
+    # --------------
+    # 몬스터 인공지능과 종류
+    # 세이브, 로드
+    # 리소스 구하기
 
 def exit():
     world.clear()
