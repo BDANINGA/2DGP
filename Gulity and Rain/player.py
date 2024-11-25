@@ -71,7 +71,7 @@ class Player(Sprite):
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
-        gfw._system_font.draw(700, 600, str(self.playerinfo))
+        #gfw._system_font.draw(700, 600, str(self.playerinfo))
 
     def move(self):
         if self.dx > 0:
@@ -90,34 +90,34 @@ class Player(Sprite):
                     i=0
                     for bg in bgs:
                         if i >= 0 and i <= 3:
-                            bg.scroll = -self.cx // 1.5
-                        elif i == 4 or i == 5:
-                            bg.scroll = -self.cx // 2
-                        elif i == 6 or i == 7:
-                            bg.scroll = -self.cx // 2.5
-                        elif i == 8:
-                            bg.scroll = -self.cx // 3
-                        elif i == 9:
-                            bg.scroll = -self.cx // 3.5
-                        elif i == 10 or i == 11:
                             bg.scroll = -self.cx
+                        elif i == 4 or i == 5:
+                            bg.scroll = -self.cx // 3.5
+                        elif i == 6 or i == 7:
+                            bg.scroll = -self.cx // 3
+                        elif i == 8:
+                            bg.scroll = -self.cx // 2.5
+                        elif i == 9:
+                            bg.scroll = -self.cx // 2
+                        elif i == 10 or i == 11:
+                            bg.scroll = -self.cx // 1.5
                         i += 1
                 elif self.dx < 0 and self.cx >= 0:
                     self.cx += self.dx * gfw.frame_time
                     i=0
                     for bg in bgs:
                         if i >= 0 and i <= 3:
-                            bg.scroll = -self.cx // 1.5
-                        elif i == 4 or i == 5:
-                            bg.scroll = -self.cx // 2
-                        elif i == 6 or i == 7:
-                            bg.scroll = -self.cx // 2.5
-                        elif i == 8:
-                            bg.scroll = -self.cx // 3
-                        elif i == 9:
-                            bg.scroll = -self.cx // 3.5
-                        elif i == 10 or i == 11:
                             bg.scroll = -self.cx
+                        elif i == 4 or i == 5:
+                            bg.scroll = -self.cx // 3.5
+                        elif i == 6 or i == 7:
+                            bg.scroll = -self.cx // 3
+                        elif i == 8:
+                            bg.scroll = -self.cx // 2.5
+                        elif i == 9:
+                            bg.scroll = -self.cx // 2
+                        elif i == 10 or i == 11:
+                            bg.scroll = -self.cx // 1.5
                         i += 1
                 else:
                     self.x += self.dx * gfw.frame_time
