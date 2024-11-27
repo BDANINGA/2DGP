@@ -83,7 +83,7 @@ class Player(Sprite):
         stages = world.objects_at(world.layer.stage)
         bgs = world.objects_at(world.layer.bg)
 
-        if self.x >= get_canvas_width() // 2:
+        if self.x >= get_canvas_width() // 2 - 10 and self.x <= get_canvas_width() // 2 + 10:
             for stage in stages:
                 if self.dx > 0 and self.cx < stage.stage_width:
                     self.cx += self.dx * gfw.frame_time
