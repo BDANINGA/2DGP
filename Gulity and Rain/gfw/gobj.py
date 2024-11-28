@@ -125,6 +125,7 @@ class HorzFillBackground(Background):
         self.dest_width = self.image.w * get_canvas_height() // self.image.h
         self.speed = speed
         self.scroll = 0
+        self.scroll_plus = 0
     def update(self):
         self.scroll += self.speed * gfw.frame_time
 

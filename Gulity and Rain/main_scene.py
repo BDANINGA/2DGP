@@ -1,7 +1,7 @@
 from pico2d import * 
 from gfw import *
 from player import Player
-from player import Attack
+from player import Attack, Upperslash
 from stage import Stage
 
 world = World(['bg','stage', 'floor', 'player', 'monster', 'playerattacks'])
@@ -42,8 +42,15 @@ def resume():
 def handle_event(e):
     player.handle_event(e)
     if e.type == SDL_MOUSEBUTTONDOWN:
-            playerattack = Attack(player.x, player.y, player.flip)
-            world.append(playerattack, world.layer.playerattacks)
+            if e.button == SDL_BUTTON_LEFT:
+                playerattack = Attack(player.x, player.y, player.flip)
+                world.append(playerattack, world.layer.playerattacks)
+            elif e.button == SDL_BUTTON_RIGHT:
+                if player.upperslash == True:
+                    playerattack = Upperslash(player.x, player.y, player.flip)
+                    world.append(playerattack, world.layer.playerattacks)
+                    player.upperslash = False
+                    player.uscool = 0
     # debug
     if e.type == SDL_KEYDOWN:
         if e.key == SDLK_1:

@@ -27,6 +27,7 @@ class Player(Sprite):
         self.rightblock = False
         self.leftblock = False
 
+        # 스탯
         self.hp =100
         self.max_hp = 100
         self.atk = 10
@@ -35,6 +36,11 @@ class Player(Sprite):
         self.gold = 0
         self.max_exp = 100
         self.sp = 0
+
+        # 스킬 쿨타임
+        self.upperslash = True
+        self.uscool = 0
+        self.uscool_max = 5
 
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
@@ -66,6 +72,8 @@ class Player(Sprite):
         # stage 전환               
         self.change_stage()
 
+        self.skillcooldown()
+
         # player 정보
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
@@ -90,34 +98,34 @@ class Player(Sprite):
                     i=0
                     for bg in bgs:
                         if i >= 0 and i <= 3:
-                            bg.scroll = -self.cx
+                            bg.scroll = -self.cx + bg.scroll_plus
                         elif i == 4 or i == 5:
-                            bg.scroll = -self.cx // 3.5
+                            bg.scroll = -self.cx // 3.5 + bg.scroll_plus
                         elif i == 6 or i == 7:
-                            bg.scroll = -self.cx // 3
+                            bg.scroll = -self.cx // 3 + bg.scroll_plus
                         elif i == 8:
-                            bg.scroll = -self.cx // 2.5
+                            bg.scroll = -self.cx // 2.5 + bg.scroll_plus
                         elif i == 9:
-                            bg.scroll = -self.cx // 2
+                            bg.scroll = -self.cx // 2 + bg.scroll_plus
                         elif i == 10 or i == 11:
-                            bg.scroll = -self.cx // 1.5
+                            bg.scroll = -self.cx // 1.5 + bg.scroll_plus
                         i += 1
                 elif self.dx < 0 and self.cx >= 0:
                     self.cx += self.dx * gfw.frame_time
                     i=0
                     for bg in bgs:
                         if i >= 0 and i <= 3:
-                            bg.scroll = -self.cx
+                            bg.scroll = -self.cx + bg.scroll_plus
                         elif i == 4 or i == 5:
-                            bg.scroll = -self.cx // 3.5
+                            bg.scroll = -self.cx // 3.5 + bg.scroll_plus
                         elif i == 6 or i == 7:
-                            bg.scroll = -self.cx // 3
+                            bg.scroll = -self.cx // 3 + bg.scroll_plus
                         elif i == 8:
-                            bg.scroll = -self.cx // 2.5
+                            bg.scroll = -self.cx // 2.5 + bg.scroll_plus
                         elif i == 9:
-                            bg.scroll = -self.cx // 2
+                            bg.scroll = -self.cx // 2 + bg.scroll_plus
                         elif i == 10 or i == 11:
-                            bg.scroll = -self.cx // 1.5
+                            bg.scroll = -self.cx // 1.5 + bg.scroll_plus
                         i += 1
                 else:
                     self.x += self.dx * gfw.frame_time
@@ -135,6 +143,15 @@ class Player(Sprite):
         if self.leftblock == True:
             self.leftblock = False
             self.dx -= 200
+
+    def skillcooldown(self):
+        if self.upperslash == False:
+            if self.uscool >= self.uscool_max:
+                self.upperslash = True
+            else:
+                self.uscool += 1 * gfw.frame_time
+
+
 
     def levelupcheck(self):
         if self.exp >= self.max_exp:
@@ -158,6 +175,7 @@ class Player(Sprite):
     def change_stage(self):
         world = gfw.top().world
         stages = world.objects_at(world.layer.stage)
+        bgs = world.objects_at(world.layer.bg)
         for stage in stages:
             for i in range(stage.gate_count):
                 if i % 2 == 0:
@@ -167,6 +185,9 @@ class Player(Sprite):
                         self.y = stage.player_start_y[i]
                         stage.index -= 1
                         self.cx = stage.undostage_width
+                        for bg in bgs:
+                            bg.scroll_plus = bg.scroll
+                            bg.scroll = - self.cx + bg.scroll_plus
                 elif i % 2 == 1:
                     if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
                         stage.change = True
@@ -174,6 +195,9 @@ class Player(Sprite):
                         self.y = stage.player_start_y[i]
                         stage.index += 1
                         self.cx = 0
+                        for bg in bgs:
+                            bg.scroll_plus = bg.scroll
+                            bg.scroll = - self.cx + bg.scroll_plus
 
     def collides_floor(self):
         world = gfw.top().world
@@ -240,18 +264,18 @@ class Player(Sprite):
                 elif self.dy < 0:
                     self.dy = 0
                     self.y = floor.y + floor.height//2 + self.height//2
-                    self.state = 'wait'
-            
+                    self.state = 'wait'                
 
 class Attack(Sprite):                         
     def __init__(self, playerx, playery, playerflip):
         if playerflip == 'h':
-            super().__init__('resource/공격.png', playerx - 50, playery)
+            super().__init__('resource/공격.png', playerx - 40, playery)
         else:
-            super().__init__('resource/공격.png', playerx + 50, playery)
+            super().__init__('resource/공격.png', playerx + 40, playery)
         self.flip = playerflip
         self.animecount = 0                 # 객체가 남아있는 시간(애니메이션 넣을 때 없어질 예정)
         self.hit = False
+        self.type = "attack"
 
     def handle_event(self, e):
         pass
@@ -262,7 +286,7 @@ class Attack(Sprite):
         self.hitcheck()
 
     def draw(self):
-        self.image.composite_draw(0, self.flip, self.x, self.y)
+        self.image.composite_draw(0, self.flip, self.x, self.y, self.width, self.height)
 
     def anime(self):
         world = gfw.top().world
@@ -280,8 +304,18 @@ class Attack(Sprite):
                 if collides_box(self, monster):
                     if self.hit == False:
                         self.hit = True
-                        monster.hp -= player.atk
-                        print("hit")
+                        if self.type == "attack":
+                            monster.hp -= player.atk
+                            print("hit")
+                        elif self.type == "upperslash":
+                            monster.hp -= player.atk * 1.5
+                            print("upperslash")
+
+class Upperslash(Attack):
+    def __init__(self, playerx, playery, playerflip):
+        super().__init__(playerx, playery + 16, playerflip)
+        self.height = 64
+        self.type = "upperslash"
 
     
 
