@@ -79,8 +79,7 @@ def handle_event(e):
             elif title_idx == 2:
                 pass
             elif title_idx == 3:
-                close_canvas()
-                exit()
+                quit()
              
         elif e.key == SDLK_UP or e.key == SDLK_w:
              if title_idx == 0:

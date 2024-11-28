@@ -7,6 +7,9 @@ class Monster(Sprite):
         super().__init__('resource/몬스터.png', x + width//2 , y + height//2)
         self.width, self.height = 32, 32
         self.type = type
+        self.ox = self.x
+        self.movex = 0
+        
         if (self.type == 1):
             self.hp = 30
             self.atk = 5
@@ -16,6 +19,7 @@ class Monster(Sprite):
             self.dx = 1
             self.flip = ' '
             self.dy = 0
+            
 
             self.rightblock = False
             self.leftblock = False
@@ -25,6 +29,12 @@ class Monster(Sprite):
     def handle_event(self, e):
         pass
     def update(self):
+        
+        world = gfw.top().world
+        players = world.objects_at(world.layer.player)
+        for player in players:
+            player = player
+
         if (self.x > self.x - 100):
             self.dx = -100
         elif (self.x < self.x + 100):
@@ -35,17 +45,12 @@ class Monster(Sprite):
         elif self.dx < 0:
             self.flip = 'h'
         
-        self.x += self.dx * gfw.frame_time
+        self.movex += self.dx * gfw.frame_time
         self.y += self.dy * gfw.frame_time
 
-        self.ox = self.x
-
-        world = gfw.top().world
-        players = world.objects_at(world.layer.player)
-        for player in players:
-            self.x = self.ox - player.cx * gfw.frame_time
-
         self.dy -= 10
+        
+        self.x = self.ox + self.movex - player.cx
         
         if self.rightblock == True:
             self.rightblock = False
