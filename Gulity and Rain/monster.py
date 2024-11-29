@@ -131,9 +131,12 @@ class Monster(Sprite):
             self.level = 1
             self.gold = 10
             self.exp = 30
-            self.dx = 1
+            
+            self.dx = 0
             self.flip = ' '
             self.dy = 0
+            self.atk_period = 0
+            self.atk_maxperiod = 100
             
 
             self.rightblock = False
@@ -219,7 +222,7 @@ class IsPlayerNear(Node):
 
     def run(self):
         distance = abs(self.monster.x - self.player.x)
-        if distance <= 40:  # 가까운 거리 기준
+        if distance <= 40 or self.monster.atk_period != 0:  # 가까운 거리 기준
             self.monster.dx = 0
             return "Success"
         return "Failure"
@@ -230,9 +233,14 @@ class AttackPlayer(Node):
         self.player = player
 
     def run(self):
+        self.monster.atk_period += 1
+        if self.monster.atk_period < self.monster.atk_maxperiod:
+            return "Running"
+        
         world = gfw.top().world
         monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
         world.append(monsterattack, world.layer.monsterattacks)
+        self.monster.atk_period = 0
         return "Success"
     
 class IsPlayerVisible(Node):
@@ -242,7 +250,7 @@ class IsPlayerVisible(Node):
 
     def run(self):
         # 간단히 거리를 기준으로 플레이어를 볼 수 있는지 판단
-        if abs(self.monster.x - self.player.x) < 200:
+        if abs(self.monster.x - self.player.x) < 300 and self.monster.atk_period == 0:
             return "Success"
         self.monster.dx = 0
         return "Failure"
