@@ -1,10 +1,10 @@
 from pico2d import * 
 from gfw import *
 from player import Player
-from player import Attack, Upperslash
+from attack import PlayerAttack, Upperslash
 from stage import Stage
 
-world = World(['bg','stage', 'floor', 'player', 'monster', 'playerattacks'])
+world = World(['bg','stage', 'floor', 'player', 'playerattacks', 'monster', 'monsterattacks'])
 
 canvas_width = 1200
 canvas_height = 720 
@@ -23,12 +23,14 @@ def enter():
 
     global playerattack
 
-    # 스킬 구현(회피, 올려베기)
-    # 아이템 구현
+    
     # --------------
     # 몬스터 인공지능과 종류
     # 세이브, 로드
+    # 스킬 구현(회피)
     # 리소스 구하기
+    # 스킬 구현(클러치)
+    # 아이템 구현
 
 def exit():
     world.clear()
@@ -43,7 +45,7 @@ def handle_event(e):
     player.handle_event(e)
     if e.type == SDL_MOUSEBUTTONDOWN:
             if e.button == SDL_BUTTON_LEFT:
-                playerattack = Attack(player.x, player.y, player.flip)
+                playerattack = PlayerAttack(player.x, player.y, player.flip)
                 world.append(playerattack, world.layer.playerattacks)
             elif e.button == SDL_BUTTON_RIGHT:
                 if player.upperslash == True:

@@ -1,6 +1,5 @@
 from pico2d import * 
 from gfw import *
-import time
 
 # def make_rect(idx):
 #     x, y = idx % 100, idx // 100
@@ -79,7 +78,7 @@ class Player(Sprite):
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
-        #gfw._system_font.draw(700, 600, str(self.playerinfo))
+        # gfw._system_font.draw(700, 600, str(self.playerinfo))
 
     def move(self):
         if self.dx > 0:
@@ -134,7 +133,7 @@ class Player(Sprite):
                 
         self.y += self.dy * gfw.frame_time
 
-        self.dy -= 10
+        self.dy -= 20
         
         if self.rightblock == True:
             self.rightblock = False
@@ -265,58 +264,6 @@ class Player(Sprite):
                     self.dy = 0
                     self.y = floor.y + floor.height//2 + self.height//2
                     self.state = 'wait'                
-
-class Attack(Sprite):                         
-    def __init__(self, playerx, playery, playerflip):
-        if playerflip == 'h':
-            super().__init__('resource/공격.png', playerx - 40, playery)
-        else:
-            super().__init__('resource/공격.png', playerx + 40, playery)
-        self.flip = playerflip
-        self.animecount = 0                 # 객체가 남아있는 시간(애니메이션 넣을 때 없어질 예정)
-        self.hit = False
-        self.type = "attack"
-
-    def handle_event(self, e):
-        pass
-        
-    def update(self):
-        self.animecount += 1
-        self.anime()
-        self.hitcheck()
-
-    def draw(self):
-        self.image.composite_draw(0, self.flip, self.x, self.y, self.width, self.height)
-
-    def anime(self):
-        world = gfw.top().world
-        playerattacks = world.objects_at(world.layer.playerattacks)
-        for attack in playerattacks:
-            if (attack.animecount > 10):
-                world.remove(attack, world.layer.playerattacks)
-
-    def hitcheck(self):
-        world = gfw.top().world
-        monsters = world.objects_at(world.layer.monster)
-        players = world.objects_at(world.layer.player)
-        for monster in monsters:
-            for player in players:
-                if collides_box(self, monster):
-                    if self.hit == False:
-                        self.hit = True
-                        if self.type == "attack":
-                            monster.hp -= player.atk
-                            print("hit")
-                        elif self.type == "upperslash":
-                            monster.hp -= player.atk * 1.5
-                            print("upperslash")
-
-class Upperslash(Attack):
-    def __init__(self, playerx, playery, playerflip):
-        super().__init__(playerx, playery + 16, playerflip)
-        self.height = 64
-        self.type = "upperslash"
-
     
 
 
