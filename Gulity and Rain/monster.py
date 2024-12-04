@@ -17,7 +17,6 @@ class Monster(Sprite):
     def handle_event(self, e):
         pass
     def update(self):
-        
         world = gfw.top().world
         players = world.objects_at(world.layer.player)
         for player in players:
@@ -36,10 +35,8 @@ class Monster(Sprite):
         self.x = self.ox + self.movex - player.cx
 
         self.death()
-        self.collides_floor()
-
         self.behavior_tree.run()
-            
+        self.collides_floor()
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
@@ -70,10 +67,10 @@ class Monster(Sprite):
                 if floor.tile_id in tiles_id_x:
                     if floor.y + floor.height//2 > self.y - self.height//4 and floor.y - floor.height//2 < self.y + self.height//4:
                         if floor.x - floor.width//2 < self.x + (self.width//2) and floor.x + floor.width//2 > self.x + (self.width//2):
-                            self.x -= self.dx * gfw.frame_time
+                            self.movex -= self.dx * gfw.frame_time
                             break    
                         if floor.x + floor.width > self.x - (self.width//2) and floor.x - floor.width < self.x - (self.width//2):
-                            self.x -= self.dx * gfw.frame_time
+                            self.movex -= self.dx * gfw.frame_time
                             break
                 
                 if floor.tile_id in tiles_id_y:

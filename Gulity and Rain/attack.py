@@ -19,28 +19,25 @@ class Attack(Sprite):
     def update(self):
         self.animecount += 1 * gfw.frame_time
         self.anime()
-        if self.type == "playerattack":
-            self.PtoM_hitcheck()
-        elif self.type == "monsterattack":
-            self.MtoP_hitcheck()
+        
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y, self.width, self.height)
 
     def anime(self):
         world = gfw.top().world
-        playerattacks = world.objects_at(world.layer.playerattacks)
-        monsterattacks = world.objects_at(world.layer.monsterattacks)
         players = world.objects_at(world.layer.player)
         for player in players:
             player = player
-        for attack in playerattacks:
-            if (attack.animecount > 30 * gfw.frame_time):
-                world.remove(attack, world.layer.playerattacks)
-                player.state = 'wait'
-        for attack in monsterattacks:
-            if (attack.animecount > 30 * gfw.frame_time):
-                world.remove(attack, world.layer.monsterattacks)
+        if self.type == "playerattack":
+            self.PtoM_hitcheck()
+            if (self.animecount > 30 * gfw.frame_time):
+                world.remove(self, world.layer.playerattacks)
+                player.state = 'wait' 
+        elif self.type == "monsterattack":
+            self.MtoP_hitcheck() 
+            if (self.animecount > 30 * gfw.frame_time):
+                world.remove(self, world.layer.monsterattacks)
 
     def PtoM_hitcheck(self):
         world = gfw.top().world
