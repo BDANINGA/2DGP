@@ -50,10 +50,13 @@ class TileMap():
                 
                 # 타일 객체 생성
                 world = gfw.top().world
-
+                stages = world.objects_at(world.layer.stage)
+                for stage in stages:
+                    stage = stage
                 if tile_id >= 315:
-                    self.monster = Monster(type=1, x=x, y=y, width = 32, height=32)
-                    world.append(self.monster, world.layer.monster)
+                    if stage.clear[stage.index - 1] == False:
+                        self.monster = Monster(type=1, x=x, y=y, width = 32, height=32)
+                        world.append(self.monster, world.layer.monster)
                 else:
                     tile_object = self.create_tile_object(tile_id, x, y, self.tile_width, self.tile_height, self.tileset_image, self.tileset_columns)
                     world.append(tile_object, world.layer.floor)

@@ -14,26 +14,29 @@ class Stage():
       self.stage = 0
       self.stage_width = 0
       self.stage_height = 0
+      self.clear = []
+      for i in range(10):
+         self.clear.append(False)
       world = gfw.top().world
   
-      world.append(HorzFillBackground('resource/Layer_0011_0.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0010_1.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0009_2.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0008_3.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0007_Lights.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0006_4.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0005_5.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0004_Lights.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0003_6.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0002_7.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0001_8.png'), world.layer.bg)
-      world.append(HorzFillBackground('resource/Layer_0000_9.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0011_0.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0010_1.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0009_2.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0008_3.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0007_Lights.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0006_4.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0005_5.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0004_Lights.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0003_6.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0002_7.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0001_8.png'), world.layer.bg)
+      world.append(HorzFillBackground('resource/Background/Layer_0000_9.png'), world.layer.bg)
       
    def draw(self):
       pass
    def update(self):
+      world = gfw.top().world
       if self.change:
-         world = gfw.top().world
          floors =  world.objects_at(world.layer.floor)
          monsters = world.objects_at(world.layer.monster)
          for floor in floors:
@@ -144,7 +147,13 @@ class Stage():
          self.undostage_height = self.stage_height
          self.stage_width = self.stage.map_width * self.stage.tile_width - get_canvas_width()
          self.stage_height = self.stage.map_height * self.stage.tile_width - get_canvas_height()
-
          self.change = False
+
+      
+      if world.count_at(world.layer.monster) == 0:
+         self.clear[self.index-1] = True
+      else:
+         self.clear[self.index-1] = False
+
 
 

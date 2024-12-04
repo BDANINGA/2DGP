@@ -25,12 +25,19 @@ def enter():
 
     
     # --------------
-    # 몬스터 인공지능과 종류
+    # 애니메이션
+    # - 달리기 공격
+    # - 콤보 공격
     # 세이브, 로드
     # 스킬 구현(회피)
-    # 리소스 구하기
     # 스킬 구현(클러치)
     # 아이템 구현
+    # 보스
+    # UI
+    # 리소스 구하기
+
+    # 발견된 버그
+    # 1. 충돌 처리
 
 def exit():
     world.clear()
@@ -45,14 +52,19 @@ def handle_event(e):
     player.handle_event(e)
     if e.type == SDL_MOUSEBUTTONDOWN:
             if e.button == SDL_BUTTON_LEFT:
-                playerattack = PlayerAttack(player.x, player.y, player.flip)
-                world.append(playerattack, world.layer.playerattacks)
-            elif e.button == SDL_BUTTON_RIGHT:
-                if player.upperslash == True:
-                    playerattack = Upperslash(player.x, player.y, player.flip)
+                if player.state == 'wait' or player.state == 'run':
+                    playerattack = PlayerAttack(player.x, player.y, player.flip)
                     world.append(playerattack, world.layer.playerattacks)
-                    player.upperslash = False
-                    player.uscool = 0
+                    player.state = 'attack'
+            elif e.button == SDL_BUTTON_RIGHT:
+                if player.can_upperslash == True:
+                    if player.upperslash == True:
+                        if player.state == 'wait' or player.state == 'run':
+                            playerattack = Upperslash(player.x, player.y, player.flip)
+                            world.append(playerattack, world.layer.playerattacks)
+                            player.upperslash = False
+                            player.uscool = 0
+                            player.state = 'attack'
     # debug
     if e.type == SDL_KEYDOWN:
         if e.key == SDLK_1:

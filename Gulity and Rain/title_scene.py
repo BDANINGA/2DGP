@@ -22,34 +22,34 @@ class Title(Sprite):
     
 
 def enter():
-    world.append(HorzFillBackground('resource/Layer_0011_0.png', speed = 100 // 4), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0010_1.png', speed = 100 // 4), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0009_2.png', speed = 100 // 4), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0008_3.png', speed = 100 // 4), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0007_Lights.png', speed = 100 // 3.5), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0006_4.png', speed = 100 // 3.5), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0005_5.png', speed = 100 // 3), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0004_Lights.png', speed = 100 // 3), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0003_6.png', speed = 100 // 2.5), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0002_7.png', speed = 100 // 2), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0001_8.png', speed = 100 // 1.5), world.layer.bg)
-    world.append(HorzFillBackground('resource/Layer_0000_9.png', speed = 100 // 1.5), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0011_0.png', speed = 100 // 4), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0010_1.png', speed = 100 // 4), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0009_2.png', speed = 100 // 4), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0008_3.png', speed = 100 // 4), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0007_Lights.png', speed = 100 // 3.5), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0006_4.png', speed = 100 // 3.5), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0005_5.png', speed = 100 // 3), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0004_Lights.png', speed = 100 // 3), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0003_6.png', speed = 100 // 2.5), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0002_7.png', speed = 100 // 2), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0001_8.png', speed = 100 // 1.5), world.layer.bg)
+    world.append(HorzFillBackground('resource/Background/Layer_0000_9.png', speed = 100 // 1.5), world.layer.bg)
 
     global titles
     titles = []
     global title_idx
     title_idx = 0
 
-    title = Title('resource/New Game.png', canvas_width, canvas_height)
+    title = Title('resource/Title/New Game.png', canvas_width, canvas_height)
     world.append(title, world.layer.title)
     titles.append(title)
-    title = Title('resource/Load.png', canvas_width, canvas_height)
+    title = Title('resource/Title/Load.png', canvas_width, canvas_height)
     world.append(title, world.layer.title)
     titles.append(title)
-    title = Title('resource/Option.png', canvas_width, canvas_height)
+    title = Title('resource/Title/Option.png', canvas_width, canvas_height)
     world.append(title, world.layer.title)
     titles.append(title)
-    title = Title('resource/Quit.png', canvas_width, canvas_height)
+    title = Title('resource/Title/Quit.png', canvas_width, canvas_height)
     world.append(title, world.layer.title)
     titles.append(title)
 

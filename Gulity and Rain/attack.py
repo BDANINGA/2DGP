@@ -8,7 +8,7 @@ class Attack(Sprite):
         else:
             super().__init__('resource/공격.png', x + 40, y)
         self.flip = flip
-        self.animecount = 0                 # 객체가 남아있는 시간(애니메이션 넣을 때 없어질 예정)
+        self.animecount = 0.0
         self.hit = False
         self.type = "attack"
         self.damage = 0
@@ -17,7 +17,7 @@ class Attack(Sprite):
         pass
         
     def update(self):
-        self.animecount += 1
+        self.animecount += 1 * gfw.frame_time
         self.anime()
         if self.type == "playerattack":
             self.PtoM_hitcheck()
@@ -31,11 +31,15 @@ class Attack(Sprite):
         world = gfw.top().world
         playerattacks = world.objects_at(world.layer.playerattacks)
         monsterattacks = world.objects_at(world.layer.monsterattacks)
+        players = world.objects_at(world.layer.player)
+        for player in players:
+            player = player
         for attack in playerattacks:
-            if (attack.animecount > 10):
+            if (attack.animecount > 30 * gfw.frame_time):
                 world.remove(attack, world.layer.playerattacks)
+                player.state = 'wait'
         for attack in monsterattacks:
-            if (attack.animecount > 10):
+            if (attack.animecount > 30 * gfw.frame_time):
                 world.remove(attack, world.layer.monsterattacks)
 
     def PtoM_hitcheck(self):

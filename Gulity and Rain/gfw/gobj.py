@@ -49,9 +49,10 @@ class Sprite:
         return f'{type(self).__name__}({self.filename})'
 
 class AnimSprite(Sprite):
-    def __init__(self, filename, x, y, fps, frame_count=0):
+    def __init__(self, filename, x, y, spacewidth, fps, frame_count=0):
         super().__init__(filename, x, y)
         self.fps = fps
+        self.spacewidth = spacewidth
         if frame_count == 0: # 정사각형인 경우 0 을 주면 알아서 갯수를 세도록 한다
             frame_count = self.image.w // self.image.h
 
@@ -70,7 +71,7 @@ class AnimSprite(Sprite):
 
     def draw(self):
         index = self.get_anim_index()
-        self.image.clip_draw(index * self.width, 0, self.width, self.height, self.x, self.y)
+        self.image.clip_composite_draw(self.spacewidth + index * (self.width + 2 * self.spacewidth), 0, self.width, self.height, 0, self.flip, self.x, self.y, w=40, h=40)
 
 class SheetSprite(AnimSprite):
     def __init__(self, fname, x, y, fps):

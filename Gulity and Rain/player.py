@@ -9,22 +9,24 @@ from gfw import *
 #     return list(map(make_rect, idxs))
 
 
-class Player(Sprite):
+class Player(AnimSprite):
     def __init__(self):
-        super().__init__('resource/플레이어.png', 200, 100)
-        self.width, self.height = 32, 32
+        super().__init__('resource/Player/_Idle.png', 200, 100, 40, 10, 10)
+        self.width, self.height = 40, 40
         self.dx = 0
         self.dy = 0
         self.flip = ' '
         self.cx = 0
         self.cy = 0
+        self.jumpcount = 1
 
         self.state = 'wait'
-        self.doublejump = True
-
-        # 충돌처리
-        self.rightblock = False
-        self.leftblock = False
+        
+        # 스킬
+        self.can_doublejump = True
+        self.can_upperslash = True
+        self.can_roll = True
+        self.can_clutch = True
 
         # 스탯
         self.hp =100
@@ -37,24 +39,31 @@ class Player(Sprite):
         self.sp = 0
 
         # 스킬 쿨타임
+        
         self.upperslash = True
         self.uscool = 0
-        self.uscool_max = 5
+        self.uscool_max = 150
+        self.roll = True
+        self.rollcool = 0
+        self.rollcool_max = 30
 
     def handle_event(self, e):
         if e.type == SDL_KEYDOWN:
             if e.key == SDLK_a:
                 self.dx -= 200
+                self.state = 'run'
             elif e.key == SDLK_d:
                 self.dx += 200
+                self.state = 'run'
             elif e.key == SDLK_SPACE:
-                if self.state != 'jump' or self.state != 'doublejump':
-                    if self.state != 'doublejump':
-                        if self.doublejump == True and self.state == 'jump':
-                            self.state = 'doublejump'
-                        else:
-                            self.state = 'jump'
-                        self.dy = 400  
+                if self.state == 'jump' and self.jumpcount != 0:
+                    self.dy = 400
+                    self.state = 'doublejump'
+                    self.jumpcount -= 1
+                elif self.state != 'jump' and self.jumpcount != 0:
+                    self.state = 'jump'
+                    self.dy = 400
+                    self.jumpcount -= 1
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
                 self.dx += 200
@@ -63,11 +72,29 @@ class Player(Sprite):
         
 
     def update(self):
-        self.move()
+        self.state_image()
 
+        self.move()
         # floor와의 충돌처리
         self.collides_floor()    
-        
+
+        if self.state != 'attack' and self.state != 'hit' and self.state != 'roll':
+            if self.dy == 0 and self.state == 'fall':
+                self.state = 'wait'
+                if self.can_doublejump == True:
+                    self.jumpcount = 2
+                else:
+                    self.jumpcount = 1
+
+            if self.state != 'jump' and self.state != 'doublejump' and self.state != 'fall':
+                if self.dx != 0:
+                    self.state = 'run'
+                else:
+                    self.state = 'wait'
+
+            if self.dy < 0:
+                self.state = 'fall'
+
         # stage 전환               
         self.change_stage()
 
@@ -77,8 +104,68 @@ class Player(Sprite):
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
 
     def draw(self):
-        self.image.composite_draw(0, self.flip, self.x, self.y)
+        super().draw()
         # gfw._system_font.draw(700, 600, str(self.playerinfo))
+
+    def state_image(self):
+        if self.state == 'wait':
+            self.filename = 'resource/Player/_Idle.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 10
+
+        if self.state == 'run':
+            self.filename = 'resource/Player/_Run.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 10
+
+        elif self.state == 'jump' or self.state == 'doublejump':
+            self.filename = 'resource/Player/_Jump.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 3
+
+        elif self.state == 'jumpfallbetween':
+            self.image = gfw.image.load('resource/Player/_JumpFallinbetween.png')
+            self.frame_count = 2
+
+        elif self.state == 'fall':
+            self.filename = 'resource/Player/_Fall.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 3
+
+        elif self.state == 'roll':
+            self.filename = 'resource/Player/_Roll.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 12
+
+        elif self.state == 'attack':
+            self.filename = 'resource/Player/_AttackNoMovement.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 4
+
+        elif self.state == 'attackcombo':
+            self.filename = 'resource/Player/_AttackComboNoMovement.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 10
+
+        elif self.state == 'run_attack':
+            self.filename = 'resource/Player/_Attack.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 4
+            
+        elif self.state == 'run_attackcombo':
+            self.filename = 'resource/Player/_AttackCombo2hit.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 10
+        
+        elif self.state == 'hit':
+            self.filename = 'resource/Player/_Hit.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 1
+        
+        elif self.state == 'death':
+            self.filename = 'resource/Player/_Death.png'
+            self.image = gfw.image.load(self.filename)
+            self.frame_count = 10
 
     def move(self):
         if self.dx > 0:
@@ -131,26 +218,21 @@ class Player(Sprite):
         else:
             self.x += self.dx * gfw.frame_time
                 
+        self.dy -= 1200 * gfw.frame_time
+
         self.y += self.dy * gfw.frame_time
-
-        self.dy -= 20
-        
-        if self.rightblock == True:
-            self.rightblock = False
-            self.dx += 200
-
-        if self.leftblock == True:
-            self.leftblock = False
-            self.dx -= 200
 
     def skillcooldown(self):
         if self.upperslash == False:
             if self.uscool >= self.uscool_max:
                 self.upperslash = True
             else:
-                self.uscool += 1 * gfw.frame_time
-
-
+                 self.uscool += 60 * gfw.frame_time
+        if self.roll == False:
+            if self.rollcool >= self.rollcool_max:
+                self.roll = True
+            else:
+                self.rollcool += 60 * gfw.frame_time
 
     def levelupcheck(self):
         if self.exp >= self.max_exp:
@@ -176,95 +258,54 @@ class Player(Sprite):
         stages = world.objects_at(world.layer.stage)
         bgs = world.objects_at(world.layer.bg)
         for stage in stages:
-            for i in range(stage.gate_count):
-                if i % 2 == 0:
-                    if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
-                        stage.change = True
-                        self.x = stage.player_start_x[i]
-                        self.y = stage.player_start_y[i]
-                        stage.index -= 1
-                        self.cx = stage.undostage_width
-                        for bg in bgs:
-                            bg.scroll_plus = bg.scroll
-                            bg.scroll = - self.cx + bg.scroll_plus
-                elif i % 2 == 1:
-                    if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
-                        stage.change = True
-                        self.x = stage.player_start_x[i]
-                        self.y = stage.player_start_y[i]
-                        stage.index += 1
-                        self.cx = 0
-                        for bg in bgs:
-                            bg.scroll_plus = bg.scroll
-                            bg.scroll = - self.cx + bg.scroll_plus
+            if stage.clear[stage.index - 1] == True:
+                for i in range(stage.gate_count):
+                    if i % 2 == 0:
+                        if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                            stage.change = True
+                            self.x = stage.player_start_x[i]
+                            stage.index -= 1
+                            self.cx = stage.undostage_width
+                            for bg in bgs:
+                                bg.scroll_plus = bg.scroll
+                                bg.scroll = - self.cx + bg.scroll_plus
+                    elif i % 2 == 1:
+                        if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                            stage.change = True
+                            self.x = stage.player_start_x[i]
+                            stage.index += 1
+                            self.cx = 0
+                            for bg in bgs:
+                                bg.scroll_plus = bg.scroll
+                                bg.scroll = - self.cx + bg.scroll_plus
 
     def collides_floor(self):
         world = gfw.top().world
         floors = world.objects_at(world.layer.floor)
+        tiles_id_x = [48, 90, 0, 3, 24, 42, 63, 21, 45, 66]
+        tiles_id_y = [180,181,139,222,223,138,112,48, 0, 3, 194, 195, 196, 1,2]
         for floor in floors:
             if collides_box(self, floor):
-                if floor.tile_id == 0 or floor.tile_id == 21 or floor.tile_id == 42 or floor.tile_id == 63:
-                    if floor.tile_id == 0:
-                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
-                            if self.dy < 0:
-                                self.dy = 0
-                                self.y = floor.y + floor.height//2 + self.height//2
-                                self.state = 'wait'
-
-                        elif self.x <= floor.x:
-                            self.dx = 0
-                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-
-                    elif self.x + self.width // 2 <= floor.x:
-                        self.dx = 0
-                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
+                if floor.tile_id in tiles_id_x:
+                    if floor.y + floor.height//2 > self.y - self.height//4 and floor.y - floor.height//2 < self.y + self.height//4:
+                        if floor.x - floor.width//2 < self.x + (self.width//2) and floor.x + floor.width//2 > self.x + (self.width//2):
+                            self.x -= self.dx * gfw.frame_time
+                            break    
+                        if floor.x + floor.width > self.x - (self.width//2) and floor.x - floor.width < self.x - (self.width//2):
+                            self.x -= self.dx * gfw.frame_time
+                            break
+                
+                if floor.tile_id in tiles_id_y:
+                    if floor.y - floor.height//2 < self.y + (self.height//2) and floor.y + floor.height//2 > self.y + (self.height//2):
+                        self.y -= self.dy * gfw.frame_time
+                        self.dy = -self.dy * 0.3
+                        break
+                    if floor.y + floor.height//2 > self.y - (self.height//2) and floor.y - floor.height//2 < self.y - (self.height//2):
+                        self.y = floor.y + floor.height//2 + self.height//2
+                        self.dy = 0
+                
                     
-
-                elif floor.tile_id == 3 or floor.tile_id == 24 or floor.tile_id == 45 or floor.tile_id == 66:
-                    if floor.tile_id == 3:
-                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
-                            if self.dy < 0:
-                                self.dy = 0
-                                self.y = floor.y + floor.height//2 + self.height//2
-                                self.state = 'wait'
-
-                        elif self.x - self.width // 2 >= floor.x:
-                            self.dx = 0
-                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-
-                    elif self.x - self.width // 2 >= floor.x:
-                        self.dx = 0
-                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-
-                elif floor.tile_id == 48 or floor.tile_id == 90:
-                    if floor.tile_id == 48:
-                        if floor.x - floor.width // 2 < self.x + self.width //2 and floor.x + floor.width // 2> self.x - self.width // 2 and self.y - self.height//2 >= floor.y + floor.height // 2 - 3:
-                            if self.dy < 0:
-                                self.dy = 0
-                                self.y = floor.y + floor.height//2 + self.height//2
-                                self.state = 'wait'
-
-                        elif self.x <= floor.x:
-                            self.dx = 0
-                            self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-                        
-                        elif self.x - self.width // 2 >= floor.x:
-                            self.dx = 0
-                            self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-
-                    elif self.x + self.width // 2 <= floor.x:
-                        self.dx = 0
-                        self.rightblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-                        
-                    elif self.x - self.width // 2 >= floor.x:
-                        self.dx = 0
-                        self.leftblock = True          # 키보드가 이미 눌러져있으니 처리해준다.
-                        
-                elif self.dy < 0:
-                    self.dy = 0
-                    self.y = floor.y + floor.height//2 + self.height//2
-                    self.state = 'wait'                
-    
+                    
 
 
     
