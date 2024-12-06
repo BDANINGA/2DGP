@@ -172,10 +172,4 @@ cython_debug/
 .history/
 
 # Built Visual Studio Code Extensions
-<<<<<<< HEAD
 *.vsix
-=======
-*.vsix
-
-*.pickle
->>>>>>> 6f592744357eaa6a0fa865551b65573fe19d7579
