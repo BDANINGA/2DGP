@@ -13,6 +13,7 @@ class Player(AnimSprite):
         self.jumpcount = 1
 
         self.state = 'wait'
+        self.changed_state = ' '
 
         self.keydown = False
         
@@ -39,7 +40,7 @@ class Player(AnimSprite):
         self.uscool_max = 150
         self.roll = True
         self.rollcool = 0
-        self.rollcool_max = 30
+        self.rollcool_max = 50
 
     def handle_event(self, e):
         if self.state != 'roll':
@@ -63,7 +64,8 @@ class Player(AnimSprite):
                         self.jumpcount -= 1
                 elif e.key == SDLK_LSHIFT:
                     if self.state == 'wait' or self.state == 'run':
-                        self.state = 'roll'
+                        if self.roll == True:
+                            self.state = 'roll'
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
                 if self.dx == -200:
@@ -76,7 +78,8 @@ class Player(AnimSprite):
         
 
     def update(self):
-        self.state_image()
+        if self.changed_state != self.state:
+            self.state_image()
 
         self.move()
         # floor와의 충돌처리
@@ -137,22 +140,30 @@ class Player(AnimSprite):
             if self.keydown == False:
                 self.dx = 0
             self.state = 'wait'
+            self.roll = False
+            self.rollcool = 0
 
     def state_image(self):
         if self.state == 'wait':
             self.filename = 'resource/Player/_Idle.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 10
+            self.created_on = time.time()
+            self.changed_state = 'wait'
 
         if self.state == 'run':
             self.filename = 'resource/Player/_Run.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 10
+            self.created_on = time.time()
+            self.changed_state = 'run'
 
         elif self.state == 'jump' or self.state == 'doublejump':
             self.filename = 'resource/Player/_Jump.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 3
+            self.created_on = time.time()
+            self.changed_state = 'jump'
 
         elif self.state == 'jumpfallbetween':
             self.image = gfw.image.load('resource/Player/_JumpFallinbetween.png')
@@ -162,16 +173,22 @@ class Player(AnimSprite):
             self.filename = 'resource/Player/_Fall.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 3
+            self.created_on = time.time()
+            self.changed_state = 'fall'
 
         elif self.state == 'roll':
             self.filename = 'resource/Player/_Roll.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 12
+            self.created_on = time.time()
+            self.changed_state = 'roll'
 
         elif self.state == 'attack':
             self.filename = 'resource/Player/_AttackNoMovement.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 4
+            self.created_on = time.time()
+            self.changed_state = 'attack'
 
         elif self.state == 'attackcombo':
             self.filename = 'resource/Player/_AttackComboNoMovement.png'
@@ -192,11 +209,15 @@ class Player(AnimSprite):
             self.filename = 'resource/Player/_Hit.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 1
+            self.created_on = time.time()
+            self.changed_state = 'hit'
         
         elif self.state == 'death':
             self.filename = 'resource/Player/_Death.png'
             self.image = gfw.image.load(self.filename)
             self.frame_count = 10
+            self.created_on = time.time()
+            self.changed_state = 'death'
 
     def move(self):
         if self.dx > 0:

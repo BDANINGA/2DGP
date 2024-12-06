@@ -8,10 +8,10 @@ class Attack(Sprite):
         else:
             super().__init__('resource/공격.png', x + 40, y)
         self.flip = flip
-        self.animecount = 0.0
         self.hit = False
         self.type = "attack"
         self.damage = 0
+        self.animecount = 0.0
 
     def handle_event(self, e):
         pass
@@ -29,9 +29,9 @@ class Attack(Sprite):
         players = world.objects_at(world.layer.player)
         for player in players:
             player = player
-        if self.type == "playerattack":
+        if self.type == "playerattack" or self.type == "upperslash":
             self.PtoM_hitcheck()
-            if (self.animecount > 30 * gfw.frame_time):
+            if (player.get_anim_index() == 3):
                 world.remove(self, world.layer.playerattacks)
                 player.state = 'wait' 
         elif self.type == "monsterattack":
@@ -61,10 +61,11 @@ class Attack(Sprite):
         players = world.objects_at(world.layer.player)
         for player in players:
             if collides_box(self, player):
-                if self.hit == False:
-                    self.hit = True
-                    player.hp -= self.damage
-                    print("player hit")
+                if player.state != 'roll':
+                    if self.hit == False:
+                        self.hit = True
+                        player.hp -= self.damage
+                        print("player hit")
                     
 class PlayerAttack(Attack):
     def __init__(self, playerx, playery, playerflip):
