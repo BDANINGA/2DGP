@@ -75,8 +75,8 @@ def handle_event(e):
             if title_idx == 0:
                 gfw.change(main_scene)
             elif title_idx == 1:
+                main_scene.get_title_idx(title_idx)
                 gfw.change(main_scene)
-                world.load('save01.pickle')
                 pass
             elif title_idx == 2:
                 pass

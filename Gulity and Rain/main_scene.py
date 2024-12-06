@@ -4,6 +4,7 @@ from player import Player
 from attack import PlayerAttack, Upperslash
 from stage import Stage
 
+
 world = World(['bg','stage', 'floor', 'player', 'playerattacks', 'monster', 'monsterattacks'])
 
 canvas_width = 1200
@@ -11,14 +12,23 @@ canvas_height = 720
 shows_bounding_box = True
 shows_object_count = True
 
+global load
+load = 0
+
 def enter():
 
     global stage, player
     
-    loaded = world.load('save/Autosave.pickle')
-    if loaded:
-        player = list(world.objects_at(world.layer.player))[0]
-        stage = list(world.objects_at(world.layer.stage))[0]
+    if load == 1:
+        loaded = world.load('save/Autosave.pickle')
+        if loaded:
+            player = list(world.objects_at(world.layer.player))[0]
+            stage = list(world.objects_at(world.layer.stage))[0]
+        else:
+            stage = Stage(1)
+            player = Player()
+            world.append(stage, world.layer.stage)
+            world.append(player, world.layer.player)
     else:
         stage = Stage(1)
         player = Player()
@@ -82,3 +92,6 @@ def handle_event(e):
 if __name__ == '__main__':
     gfw.start_main_module()
 
+def get_title_idx(data_from_title):
+    global load
+    load = data_from_title
