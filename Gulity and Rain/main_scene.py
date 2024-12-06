@@ -36,7 +36,6 @@ def enter():
         world.append(player, world.layer.player)
     # --------------
     # 스킬 구현(회피)
-    # 스킬 구현(클러치)
     # 아이템 구현
     # 보스
     # UI
@@ -49,6 +48,8 @@ def enter():
     # 1. 애니메이션
     # - 달리기 공격
     # - 콤보 공격
+    # 일시정지 화면
+    # 스킬 구현(클러치)
 
 def exit():
     world.clear()
@@ -61,21 +62,22 @@ def resume():
 
 def handle_event(e):
     player.handle_event(e)
-    if e.type == SDL_MOUSEBUTTONDOWN:
-            if e.button == SDL_BUTTON_LEFT:
-                if player.state == 'wait' or player.state == 'run':
-                    playerattack = PlayerAttack(player.x, player.y, player.flip)
-                    world.append(playerattack, world.layer.playerattacks)
-                    player.state = 'attack'
-            elif e.button == SDL_BUTTON_RIGHT:
-                if player.can_upperslash == True:
-                    if player.upperslash == True:
-                        if player.state == 'wait' or player.state == 'run':
-                            playerattack = Upperslash(player.x, player.y, player.flip)
-                            world.append(playerattack, world.layer.playerattacks)
-                            player.upperslash = False
-                            player.uscool = 0
-                            player.state = 'attack'
+    if player.state != 'roll':
+        if e.type == SDL_MOUSEBUTTONDOWN:
+                if e.button == SDL_BUTTON_LEFT:
+                    if player.state == 'wait' or player.state == 'run':
+                        playerattack = PlayerAttack(player.x, player.y, player.flip)
+                        world.append(playerattack, world.layer.playerattacks)
+                        player.state = 'attack'
+                elif e.button == SDL_BUTTON_RIGHT:
+                    if player.can_upperslash == True:
+                        if player.upperslash == True:
+                            if player.state == 'wait' or player.state == 'run':
+                                playerattack = Upperslash(player.x, player.y, player.flip)
+                                world.append(playerattack, world.layer.playerattacks)
+                                player.upperslash = False
+                                player.uscool = 0
+                                player.state = 'attack'
     # debug
     if e.type == SDL_KEYDOWN:
         if e.key == SDLK_1:

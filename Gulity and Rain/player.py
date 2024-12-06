@@ -13,6 +13,8 @@ class Player(AnimSprite):
         self.jumpcount = 1
 
         self.state = 'wait'
+
+        self.keydown = False
         
         # 스킬
         self.can_doublejump = True
@@ -40,27 +42,37 @@ class Player(AnimSprite):
         self.rollcool_max = 30
 
     def handle_event(self, e):
-        if e.type == SDL_KEYDOWN:
-            if e.key == SDLK_a:
-                self.dx -= 200
-                self.state = 'run'
-            elif e.key == SDLK_d:
-                self.dx += 200
-                self.state = 'run'
-            elif e.key == SDLK_SPACE:
-                if self.state == 'jump' and self.jumpcount != 0:
-                    self.dy = 400
-                    self.state = 'doublejump'
-                    self.jumpcount -= 1
-                elif self.state != 'jump' and self.jumpcount != 0:
-                    self.state = 'jump'
-                    self.dy = 400
-                    self.jumpcount -= 1
+        if self.state != 'roll':
+            if e.type == SDL_KEYDOWN:
+                if e.key == SDLK_a:
+                    self.dx = -200
+                    self.state = 'run'
+                    self.keydown = True
+                elif e.key == SDLK_d:
+                    self.dx = 200
+                    self.state = 'run'
+                    self.keydown = True
+                elif e.key == SDLK_SPACE:
+                    if self.state == 'jump' and self.jumpcount != 0:
+                        self.dy = 400
+                        self.state = 'doublejump'
+                        self.jumpcount -= 1
+                    elif self.state != 'jump' and self.jumpcount != 0:
+                        self.state = 'jump'
+                        self.dy = 400
+                        self.jumpcount -= 1
+                elif e.key == SDLK_LSHIFT:
+                    if self.state == 'wait' or self.state == 'run':
+                        self.state = 'roll'
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
-                self.dx += 200
+                if self.dx == -200:
+                    self.dx += 200
+                    self.keydown = False
             elif e.key ==  SDLK_d:
-                self.dx -= 200
+                if self.dx == 200:
+                    self.dx -= 200
+                    self.keydown = False
         
 
     def update(self):
@@ -68,7 +80,10 @@ class Player(AnimSprite):
 
         self.move()
         # floor와의 충돌처리
-        self.collides_floor()    
+        self.collides_floor()
+
+        if self.state == 'roll':
+            self.do_roll()    
 
         if self.state != 'attack' and self.state != 'hit' and self.state != 'roll':
             if self.dy == 0 and self.state == 'fall':
@@ -111,6 +126,17 @@ class Player(AnimSprite):
             state['image'] = gfw.image.load(self.filename)
         super().__setstate__(state)  
         self.dx = 0
+
+    def do_roll(self):
+        self.state = 'roll'
+        if self.flip == ' ':
+            self.dx = 200
+        elif self.flip == 'h':
+            self.dx = -200
+        if self.get_anim_index() == 11:
+            if self.keydown == False:
+                self.dx = 0
+            self.state = 'wait'
 
     def state_image(self):
         if self.state == 'wait':
