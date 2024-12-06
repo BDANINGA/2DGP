@@ -4,7 +4,8 @@ from attack import MonsterAttack
 
 class Monster(Sprite):
     def __init__(self, type, x, y, width, height):
-        super().__init__('resource/몬스터.png', x + width//2 , y + height//2)
+        self.filename = 'resource/몬스터.png'
+        super().__init__(self.filename, x + width//2 , y + height//2)
         self.width, self.height = 32, 32
         self.type = type
         self.ox = self.x
@@ -34,12 +35,18 @@ class Monster(Sprite):
         
         self.x = self.ox + self.movex - player.cx
 
-        self.death()
         self.behavior_tree.run()
         self.collides_floor()
+        self.death()
 
     def draw(self):
         self.image.composite_draw(0, self.flip, self.x, self.y)
+
+    def __getstate__(self):
+        pass
+        
+    def setstate(self):
+        pass
 
     def death(self):
         if self.hp <= 0:
@@ -56,6 +63,7 @@ class Monster(Sprite):
                 print("돈 획득:",self.gold)
                 world.remove(self, world.layer.monster)
                 player.levelupcheck()
+                
 
     def collides_floor(self):
         world = gfw.top().world
@@ -95,10 +103,6 @@ class Monster(Sprite):
             self.dy = 0
             self.atk_period = 0
             self.atk_maxperiod = 100
-            
-
-            self.rightblock = False
-            self.leftblock = False
 
             self.state = 'wait'
 

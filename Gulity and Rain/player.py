@@ -1,14 +1,6 @@
 from pico2d import * 
 from gfw import *
 
-# def make_rect(idx):
-#     x, y = idx % 100, idx // 100
-#     return (x * 272 + 2, y * 272 + 2, 270, 270)
-
-# def make_rects(*idxs):
-#     return list(map(make_rect, idxs))
-
-
 class Player(AnimSprite):
     def __init__(self):
         super().__init__('resource/Player/_Idle.png', 200, 100, 40, 10, 10)
@@ -81,10 +73,6 @@ class Player(AnimSprite):
         if self.state != 'attack' and self.state != 'hit' and self.state != 'roll':
             if self.dy == 0 and self.state == 'fall':
                 self.state = 'wait'
-                if self.can_doublejump == True:
-                    self.jumpcount = 2
-                else:
-                    self.jumpcount = 1
 
             if self.state != 'jump' and self.state != 'doublejump' and self.state != 'fall':
                 if self.dx != 0:
@@ -106,6 +94,23 @@ class Player(AnimSprite):
     def draw(self):
         super().draw()
         # gfw._system_font.draw(700, 600, str(self.playerinfo))
+
+    def __getstate__(self):
+        state = super().__getstate__()
+
+        state.pop('filename', None)
+        state.pop('playerinfo', None)
+
+        print(state)
+
+        return state
+    
+    def __setstate__(self, state):
+        self.filename = 'resource/Player/_Idle.png'
+        if 'image' not in state:
+            state['image'] = gfw.image.load(self.filename)
+        super().__setstate__(state)  
+        self.dx = 0
 
     def state_image(self):
         if self.state == 'wait':
@@ -261,7 +266,7 @@ class Player(AnimSprite):
             if stage.clear[stage.index - 1] == True:
                 for i in range(stage.gate_count):
                     if i % 2 == 0:
-                        if self.x < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        if self.x - self.width//2 < stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
                             stage.change = True
                             self.x = stage.player_start_x[i]
                             stage.index -= 1
@@ -270,7 +275,7 @@ class Player(AnimSprite):
                                 bg.scroll_plus = bg.scroll
                                 bg.scroll = - self.cx + bg.scroll_plus
                     elif i % 2 == 1:
-                        if self.x > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
+                        if self.x + self.width//2 > stage.gate_x[i] and self.y < stage.gate_y[i] + 50 and self.y > stage.gate_y[i] - 50:
                             stage.change = True
                             self.x = stage.player_start_x[i]
                             stage.index += 1
@@ -284,6 +289,10 @@ class Player(AnimSprite):
         floors = world.objects_at(world.layer.floor)
         tiles_id_x = [48, 90, 0, 3, 24, 42, 63, 21, 45, 66]
         tiles_id_y = [180,181,139,222,223,138,112,48, 0, 3, 194, 195, 196, 1,2]
+        if self.x + self.width//2 >= 1200:
+            self.x -= self.dx * gfw.frame_time
+        elif self.x - self.width//2 <= 0:
+            self.x -= self.dx * gfw.frame_time
         for floor in floors:
             if collides_box(self, floor):
                 if floor.tile_id in tiles_id_x:
@@ -303,6 +312,10 @@ class Player(AnimSprite):
                     if floor.y + floor.height//2 > self.y - (self.height//2) and floor.y - floor.height//2 < self.y - (self.height//2):
                         self.y = floor.y + floor.height//2 + self.height//2
                         self.dy = 0
+                        if self.can_doublejump == True:
+                            self.jumpcount = 2
+                        else:
+                            self.jumpcount = 1
                 
                     
                     

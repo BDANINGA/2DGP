@@ -91,3 +91,7 @@ class Tile(Sprite):
         players = world.objects_at(world.layer.player)
         for player in players:
             self.x = self.ox - player.cx
+    def __getstate__(self):
+        pass
+    def __setstate__(self):
+        pass

@@ -73,6 +73,10 @@ class AnimSprite(Sprite):
         index = self.get_anim_index()
         self.image.clip_composite_draw(self.spacewidth + index * (self.width + 2 * self.spacewidth), 0, self.width, self.height, 0, self.flip, self.x, self.y, w=40, h=40)
 
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        # print(f'{self.filename=},')
+
 class SheetSprite(AnimSprite):
     def __init__(self, fname, x, y, fps):
         super().__init__(fname, x, y, fps, 1)

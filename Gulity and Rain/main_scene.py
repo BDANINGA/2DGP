@@ -13,22 +13,18 @@ shows_object_count = True
 
 def enter():
 
-    global stage
-    stage = Stage(1)
-    world.append(stage, world.layer.stage)
-
-    global player
-    player = Player()
-    world.append(player, world.layer.player)
-
-    global playerattack
-
+    global stage, player
     
+    loaded = world.load('save/Autosave.pickle')
+    if loaded:
+        player = list(world.objects_at(world.layer.player))[0]
+        stage = list(world.objects_at(world.layer.stage))[0]
+    else:
+        stage = Stage(1)
+        player = Player()
+        world.append(stage, world.layer.stage)
+        world.append(player, world.layer.player)
     # --------------
-    # 애니메이션
-    # - 달리기 공격
-    # - 콤보 공격
-    # 세이브, 로드
     # 스킬 구현(회피)
     # 스킬 구현(클러치)
     # 아이템 구현
@@ -38,6 +34,11 @@ def enter():
 
     # 발견된 버그
     # 1. 충돌 처리
+
+    # 추가적으로 하면 좋은 것
+    # 1. 애니메이션
+    # - 달리기 공격
+    # - 콤보 공격
 
 def exit():
     world.clear()
@@ -74,8 +75,9 @@ def handle_event(e):
             stage.change = True
             stage.index -= 1
         elif e.key == SDLK_3:
-            print(player.x)
-            print(player.y)
+            world.save('save/Autosave.pickle')
+        elif e.key == SDLK_4:
+            print(world.objects)
 
 if __name__ == '__main__':
     gfw.start_main_module()

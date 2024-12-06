@@ -4,8 +4,8 @@ from floor import TileMap
 import gfw.world
 
 Inf = float('inf')
-left = 0
-right = 1200
+left = 10
+right = 1190
 
 class Stage():
    def __init__(self, index):              # 총 30개의 stage가 있을 것이다.
@@ -36,6 +36,7 @@ class Stage():
       pass
    def update(self):
       world = gfw.top().world
+
       if self.change:
          floors =  world.objects_at(world.layer.floor)
          monsters = world.objects_at(world.layer.monster)
@@ -46,7 +47,7 @@ class Stage():
 
          if self.index == 1:
             self.stage = TileMap('resource/stage01.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
-            self.gate_x = (Inf, 1200)
+            self.gate_x = (Inf, right)
             self.gate_y = (Inf, 50)
 
             self.gate_count = 2
@@ -61,7 +62,7 @@ class Stage():
 
             self.gate_count = 2
 
-            self.player_start_x = (1150, 50)
+            self.player_start_x = (right - 50, left + 50)
             self.player_start_y = (70, 70)
 
          elif self.index == 3:   
@@ -71,7 +72,7 @@ class Stage():
 
             self.gate_count = 2
 
-            self.player_start_x = (1150, 50)
+            self.player_start_x = (right - 50, left + 50)
             self.player_start_y = (70, 70)
 
          elif self.index == 4:   
@@ -81,7 +82,7 @@ class Stage():
 
             self.gate_count = 2
 
-            self.player_start_x = (1150, 50)
+            self.player_start_x = (right - 50, left + 50)
             self.player_start_y = (70, 70)
 
          elif self.index == 5:   
@@ -91,7 +92,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, Inf, 50)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (70, 144, Inf, 264)
 
          elif self.index == 6:   
@@ -101,7 +102,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, 1150, Inf)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (144, 432, 264, Inf)
 
          elif self.index == 7:   
@@ -111,7 +112,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, Inf, 50)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (432, 168, Inf, 312)
          elif self.index == 8:   
             self.stage = TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
@@ -120,7 +121,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, 1150, Inf)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (168, 328, 328, Inf)
 
          elif self.index == 9:   
@@ -130,7 +131,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, Inf, Inf)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (328, 136, Inf, Inf)
 
          elif self.index == 10:   
@@ -140,7 +141,7 @@ class Stage():
 
             self.gate_count = 4
 
-            self.player_start_x = (1150, 50, Inf, Inf)
+            self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (136, 136, Inf, Inf)
 
          self.undostage_width = self.stage_width
@@ -148,12 +149,31 @@ class Stage():
          self.stage_width = self.stage.map_width * self.stage.tile_width - get_canvas_width()
          self.stage_height = self.stage.map_height * self.stage.tile_width - get_canvas_height()
          self.change = False
+         if world.count_at(world.layer.player) != 0:
+            world.save('save/Autosave.pickle')
 
-      
       if world.count_at(world.layer.monster) == 0:
          self.clear[self.index-1] = True
       else:
          self.clear[self.index-1] = False
+         
 
+   def __getstate__(self):
+      # 객체의 상태를 저장할 때, 불필요한 속성들은 제외합니다.
+      state = self.__dict__.copy()
 
+      # 직렬화할 필요가 없는 속성들 삭제
+      if 'stage' in state:
+         del state['stage']  # TileMap 객체는 직렬화할 수 없으므로 제외
+      if 'undostage_width' in state:
+         del state['undostage_width']
+      if 'undostage_height' in state:
+         del state['undostage_height']
+      return state
 
+   def __setstate__(self, state):
+      # 저장된 상태를 객체에 복원
+      self.__dict__.update(state)
+      self.change = True  # 상태 복원 후 change를 True로 설정
+      # stage 객체는 복원하지 않음, 이 객체는 update()에서 초기화됨
+      self.stage = None  # 나중에 update()에서 초기화됨
