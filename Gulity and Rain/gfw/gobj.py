@@ -60,6 +60,7 @@ class AnimSprite(Sprite):
           self.width = self.image.w // frame_count
         self.frame_count = frame_count
         self.created_on = time.time()
+        
 
     # elapsed time 을 구하기 위해 update() 에서 gfw.frame_time 을 누적하지 않는다
     # 그렇게 해도 되긴 하지만, 간단한 반복 애니메이션은 정확한 시간 누적이 필요한게 아니다
