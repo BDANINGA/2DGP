@@ -40,10 +40,13 @@ class Stage():
       if self.change:
          floors =  world.objects_at(world.layer.floor)
          monsters = world.objects_at(world.layer.monster)
+         items = world.objects_at(world.layer.item)
          for floor in floors:
             world.remove(floor, world.layer.floor)
          for monster in monsters:
             world.remove(monster, world.layer.monster)
+         for item in items:
+            world.remove(item, world.layer.item)
 
          if self.index == 1:
             self.stage = TileMap('resource/stage01.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
@@ -115,7 +118,7 @@ class Stage():
             self.player_start_x = (right - 50, left + 50, Inf, left + 50)
             self.player_start_y = (432, 168, Inf, 312)
          elif self.index == 8:   
-            self.stage = TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png', 'resource/몬스터.png')
+            self.stage = TileMap('resource/stage08.tmx', 'resource/oak_woods_tileset.png', 'resource/회피.png')
             self.gate_x = (left, right, left, Inf)
             self.gate_y = (168, 328, 328, Inf)
 

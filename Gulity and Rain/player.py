@@ -18,9 +18,9 @@ class Player(AnimSprite):
         self.keydown = False
         
         # 스킬
-        self.can_doublejump = True
+        self.can_doublejump = False
         self.can_upperslash = True
-        self.can_roll = True
+        self.can_roll = False
         self.can_clutch = True
 
         # 스탯
@@ -64,7 +64,7 @@ class Player(AnimSprite):
                         self.jumpcount -= 1
                 elif e.key == SDLK_LSHIFT:
                     if self.state == 'wait' or self.state == 'run':
-                        if self.roll == True:
+                        if self.can_roll == True and self.roll == True:
                             self.state = 'roll'
         if e.type == SDL_KEYUP:
             if e.key == SDLK_a:
@@ -118,8 +118,6 @@ class Player(AnimSprite):
 
         state.pop('filename', None)
         state.pop('playerinfo', None)
-
-        print(state)
 
         return state
     

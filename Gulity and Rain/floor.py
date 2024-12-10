@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from gfw import *
 from pico2d import *
 from monster import Monster
+from item import Item
 
 class TileMap():
     def __init__(self, tmx_file, tileset_image, tileset_image2):
@@ -53,10 +54,15 @@ class TileMap():
                 stages = world.objects_at(world.layer.stage)
                 for stage in stages:
                     stage = stage
-                if tile_id >= 315:
+                if tile_id >= 315 and tile_id < 400:
                     if stage.clear[stage.index - 1] == False:
                         self.monster = Monster(type=1, x=x, y=y, width = 32, height=32)
                         world.append(self.monster, world.layer.monster)
+                elif tile_id >= 400:
+                    self.item = Item(tile_id, x, y, width = 48, height = 48)
+                    world.append(self.item, world.layer.item)
+                    if self.item.ready == True:
+                        world.remove(self.item, world.layer.item)
                 else:
                     tile_object = self.create_tile_object(tile_id, x, y, self.tile_width, self.tile_height, self.tileset_image, self.tileset_columns)
                     world.append(tile_object, world.layer.floor)

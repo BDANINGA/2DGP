@@ -49,7 +49,7 @@ class Monster(Sprite):
         pass
 
     def death(self):
-        if self.hp <= 0:
+        if self.hp <= 0 or self.y < 0:
             print("몬스터 죽음")
             world = gfw.top().world
             stages = world.objects_at(world.layer.stage)

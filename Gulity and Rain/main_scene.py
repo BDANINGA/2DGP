@@ -5,7 +5,7 @@ from attack import PlayerAttack, Upperslash
 from stage import Stage
 
 
-world = World(['bg','stage', 'floor', 'player', 'playerattacks', 'monster', 'monsterattacks'])
+world = World(['bg','stage', 'floor', 'player', 'playerattacks', 'monster', 'monsterattacks', 'item'])
 
 canvas_width = 1200
 canvas_height = 720 
@@ -34,20 +34,22 @@ def enter():
         player = Player()
         world.append(stage, world.layer.stage)
         world.append(player, world.layer.player)
+
     # --------------
-    # 스킬 구현(회피)
     # 아이템 구현
     # 보스
     # UI
     # 리소스 구하기
 
-    # 발견된 버그
+    # --- 발견된 버그 ---
     # 1. 충돌 처리
 
-    # 추가적으로 하면 좋은 것
+    # --- 추가적으로 하면 좋은 것 ---
     # 1. 애니메이션
     # - 달리기 공격
     # - 콤보 공격
+    # - 공격의 fps를 낮춰보자
+    # - 공격의 범위와 sprite 범위 재설정
     # 일시정지 화면
     # 스킬 구현(클러치)
 
