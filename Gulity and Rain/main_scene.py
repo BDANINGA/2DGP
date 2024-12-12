@@ -4,8 +4,7 @@ from player import Player
 from attack import PlayerAttack, Upperslash
 from stage import Stage
 
-
-world = World(['bg','stage', 'floor', 'player', 'playerattacks', 'monster', 'monsterattacks', 'item'])
+world = World(['bg','stage', 'floor', 'playerattacks', 'monster', 'monsterattacks', 'item', 'player'])
 
 canvas_width = 1200
 canvas_height = 720 
@@ -30,13 +29,12 @@ def enter():
             world.append(stage, world.layer.stage)
             world.append(player, world.layer.player)
     else:
-        stage = Stage(1)
+        stage = Stage(10)
         player = Player()
         world.append(stage, world.layer.stage)
         world.append(player, world.layer.player)
 
     # --------------
-    # 아이템 구현
     # 보스
     # UI
     # 리소스 구하기

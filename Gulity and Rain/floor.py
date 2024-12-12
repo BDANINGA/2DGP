@@ -56,7 +56,7 @@ class TileMap():
                     stage = stage
                 if tile_id >= 315 and tile_id < 400:
                     if stage.clear[stage.index - 1] == False:
-                        self.monster = Monster(type=1, x=x, y=y, width = 32, height=32)
+                        self.monster = Monster(type='normal', x=x, y=y, width = 32, height=32)
                         world.append(self.monster, world.layer.monster)
                 elif tile_id >= 400:
                     self.item = Item(tile_id, x, y, width = 48, height = 48)
@@ -68,6 +68,9 @@ class TileMap():
                     world.append(tile_object, world.layer.floor)
                     layer_objects.append(tile_object)
             self.tile_objects.append(layer_objects)
+
+        if stage.index == 10:
+            world.append(Monster(type='boss', x=1000, y=150, width=40, height=40), world.layer.monster)
 
 def create_tile_object(tile_id, x, y, width, height, tileset_image, tileset_columns):
     return Tile(tile_id, x, y, width, height, tileset_image, tileset_columns)

@@ -2,17 +2,15 @@ from pico2d import *
 from gfw import *
 from attack import MonsterAttack
 
-class Monster(Sprite):
+class Monster(AnimSprite):
     def __init__(self, type, x, y, width, height):
-        self.filename = 'resource/몬스터.png'
-        super().__init__(self.filename, x + width//2 , y + height//2)
-        self.width, self.height = 32, 32
         self.type = type
+        self.make_monster_status(self.type)
+        super().__init__(self.filename, x + width//2 , y + height//2, spacewidth=0, fps=0)
         self.ox = self.x
         self.movex = 0
-        self.flip = ' '
         
-        self.make_monster_status(self.type)
+        
         self.make_behavior_tree()           
 
     def handle_event(self, e):
@@ -28,6 +26,7 @@ class Monster(Sprite):
         elif self.dx < 0:
             self.flip = 'h'
         
+        
         self.movex += self.dx * gfw.frame_time
         self.y += self.dy * gfw.frame_time
 
@@ -40,6 +39,13 @@ class Monster(Sprite):
         self.death()
 
     def draw(self):
+        if self.dx > 0:
+            if self.type == 'boss':
+                self.flip = 'h'
+        elif self.dx < 0:
+            if self.type == 'boss':
+                self.flip = ' '
+        
         self.image.composite_draw(0, self.flip, self.x, self.y)
 
     def __getstate__(self):
@@ -91,18 +97,33 @@ class Monster(Sprite):
                         self.dy = 0
 
     def make_monster_status(self, type):
-        if (type == 1):
+        if (type == 'normal'):
+            self.filename = 'resource/몬스터.png'
             self.hp = 30
             self.atk = 5
-            self.level = 1
             self.gold = 10
             self.exp = 30
             
             self.dx = 0
             self.flip = ' '
             self.dy = 0
-            self.atk_period = 0
-            self.atk_maxperiod = 100
+            self.atk_period = 0.0
+            self.atk_maxperiod = 1
+
+            self.state = 'wait'
+
+        elif (type == 'boss'):
+            self.filename = 'resource/Boss/boss_1_idle.png'
+            self.hp = 3000
+            self.atk = 50
+            self.gold = 100
+            self.exp = 300
+            
+            self.dx = 0
+            self.flip = ' '
+            self.dy = 0
+            self.atk_period = 0.0
+            self.atk_maxperiod = 1
 
             self.state = 'wait'
 
@@ -195,7 +216,7 @@ class AttackPlayer(Node):
         self.player = player
 
     def run(self):
-        self.monster.atk_period += 1
+        self.monster.atk_period += 1 * gfw.frame_time
         if self.monster.atk_period < self.monster.atk_maxperiod:
             return "Running"
         

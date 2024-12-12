@@ -65,6 +65,8 @@ class Attack(Sprite):
                     if self.hit == False:
                         self.hit = True
                         player.hp -= self.damage
+                        player.state = 'hit'
+                        player.hit_time = 0
                         print("player hit")
                     
 class PlayerAttack(Attack):

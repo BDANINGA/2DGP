@@ -9,12 +9,12 @@ class Item(Sprite):
             player = player
         if tile_id == 400:
             self.type = 'doublejump'
-            self.filename = 'resource/더블 점프.png'
+            self.filename = 'resource/Item/더블 점프.png'
             if player.can_doublejump == True:
                 self.ready = True
         elif tile_id == 401:
             self.type = 'roll'
-            self.filename = 'resource/회피.png'
+            self.filename = 'resource/Item/회피.png'
             if player.can_roll == True:
                 self.ready = True
         super().__init__(self.filename, x + width // 2, y + height//2)

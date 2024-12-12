@@ -11,6 +11,7 @@ class Player(AnimSprite):
         self.cx = 0
         self.cy = 0
         self.jumpcount = 1
+        self.hit_time = 3.0
 
         self.state = 'wait'
         self.changed_state = ' '
@@ -43,7 +44,7 @@ class Player(AnimSprite):
         self.rollcool_max = 50
 
     def handle_event(self, e):
-        if self.state != 'roll':
+        if self.state != 'roll' and self.state != 'hit' and self.state != 'death':
             if e.type == SDL_KEYDOWN:
                 if e.key == SDLK_a:
                     self.dx = -200
@@ -86,9 +87,11 @@ class Player(AnimSprite):
         self.collides_floor()
 
         if self.state == 'roll':
-            self.do_roll()    
+            self.do_roll()
+        if self.state == 'hit':
+            self.do_hit()
 
-        if self.state != 'attack' and self.state != 'hit' and self.state != 'roll':
+        if self.state != 'attack' and self.state != 'hit' and self.state != 'roll' and self.state != 'death':
             if self.dy == 0 and self.state == 'fall':
                 self.state = 'wait'
 
@@ -105,6 +108,10 @@ class Player(AnimSprite):
         self.change_stage()
 
         self.skillcooldown()
+
+        if self.hp <= 0:
+            self.state = 'death'
+            self.death()
 
         # player 정보
         self.playerinfo = str(self.hp), str(self.atk), str(self.level), str(self.exp), str(self.gold)
@@ -140,6 +147,19 @@ class Player(AnimSprite):
             self.state = 'wait'
             self.roll = False
             self.rollcool = 0
+    
+    def do_hit(self):
+        self.state = 'hit'
+        if self.hit_time < 5:
+            self.dx = 0
+            self.hit_time += 60 * gfw.frame_time
+        if self.hit_time >= 5:
+            self.state = 'wait'
+
+    def death(self):
+        if self.get_anim_index() >= 3:
+            import gameover
+            gfw.change(gameover)
 
     def state_image(self):
         if self.state == 'wait':
@@ -216,6 +236,7 @@ class Player(AnimSprite):
             self.frame_count = 10
             self.created_on = time.time()
             self.changed_state = 'death'
+            self.fps = 3
 
     def move(self):
         if self.dx > 0:
