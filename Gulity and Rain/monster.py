@@ -289,6 +289,7 @@ class AttackPlayer(Node):
                     monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
                     world.append(monsterattack, world.layer.monsterattacks)
                     self.attack = True
+                    gfw.sound.sfx('resource/Sounds/bossatk.wav').play()
                 
             if self.monster.get_anim_index() == self.monster.frame_count - 1:
                 self.monster.atk_period = 0
@@ -300,6 +301,7 @@ class AttackPlayer(Node):
             monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
             world.append(monsterattack, world.layer.monsterattacks)
             self.monster.atk_period = 0
+            gfw.sound.sfx('resource/Sounds/monsteratk.wav').play()
             return "Success"
     
 class IsPlayerVisible(Node):

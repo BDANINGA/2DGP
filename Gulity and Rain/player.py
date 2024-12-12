@@ -92,6 +92,7 @@ class Player(AnimSprite):
             self.do_roll()
         if self.state == 'hit':
             self.do_hit()
+            gfw.sound.sfx('resource/Sounds/playerhit.wav').play()
 
         if self.state != 'attack' and self.state != 'hit' and self.state != 'roll' and self.state != 'death':
             if self.dy == 0 and self.state == 'fall':
@@ -111,7 +112,7 @@ class Player(AnimSprite):
 
         self.skillcooldown()
 
-        if self.hp <= 0:
+        if self.hp <= 0 or self.y <= 0:
             self.state = 'death'
             self.death()
 

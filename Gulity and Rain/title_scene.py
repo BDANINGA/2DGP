@@ -55,14 +55,21 @@ def enter():
 
     titles[title_idx].selected = True
 
+    global music
+    music = gfw.sound.music('resource/Sounds/title.wav')
+    music.repeat_play()
+
 def exit():
+    music.stop()
     world.clear()
 
 def pause():
     print('[main.pause()]')
+    music.pause()
 
 def resume():
     print('[main.resume()]')
+    music.resume()
 
 def handle_event(e):
     global title_idx
@@ -90,6 +97,7 @@ def handle_event(e):
                   titles[title_idx].selected = False
                   title_idx -= 1
                   titles[title_idx].selected = True
+                  gfw.sound.sfx('resource/Sounds/title_select.wav').play()
         elif e.key == SDLK_DOWN or e.key == SDLK_s:
              if title_idx == 3:
                   pass
@@ -97,6 +105,7 @@ def handle_event(e):
                   titles[title_idx].selected = False
                   title_idx += 1
                   titles[title_idx].selected = True
+                  gfw.sound.sfx('resource/Sounds/title_select.wav').play()
 
 if __name__ == '__main__':
     gfw.start_main_module()

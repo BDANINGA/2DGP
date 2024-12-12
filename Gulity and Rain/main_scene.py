@@ -36,9 +36,9 @@ def enter():
         
     world.append(ui.PlayerUI('resource/UI/hp_bar2.png', 300, 600, 500, 30), world.layer.ui)
     
-    # --------------
-    # UI
-    # 리소스 구하기
+    global music
+    music = gfw.sound.music('resource/Sounds/main.wav')
+    music.repeat_play()
 
     # --- 발견된 버그 ---
     # 1. 충돌 처리
@@ -53,13 +53,16 @@ def enter():
     # 스킬 구현(클러치)
 
 def exit():
+    music.stop()
     world.clear()
 
 def pause():
     print('[main.pause()]')
+    music.pause()
 
 def resume():
     print('[main.resume()]')
+    music.resume()
 
 def handle_event(e):
     player.handle_event(e)
@@ -70,6 +73,7 @@ def handle_event(e):
                         playerattack = PlayerAttack(player.x, player.y, player.flip)
                         world.append(playerattack, world.layer.playerattacks)
                         player.state = 'attack'
+                        gfw.sound.sfx('resource/Sounds/playeratk.wav').play()
                 elif e.button == SDL_BUTTON_RIGHT:
                     if player.can_upperslash == True:
                         if player.upperslash == True:
@@ -79,6 +83,8 @@ def handle_event(e):
                                 player.upperslash = False
                                 player.uscool = 0
                                 player.state = 'attack'
+                                gfw.sound.sfx('resource/Sounds/playeratk.wav').play()
+                
     # debug
     if e.type == SDL_KEYDOWN:
         if e.key == SDLK_1:

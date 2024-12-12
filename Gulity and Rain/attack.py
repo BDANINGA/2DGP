@@ -52,9 +52,11 @@ class Attack(Sprite):
                     if self.type == "playerattack":
                         monster.hp -= self.damage
                         print("hit")
+                        gfw.sound.sfx('resource/Sounds/monsterhit.wav').play()
                     elif self.type == "upperslash":
                         monster.hp -= self.damage * 1.5
                         print("upperslash")
+                        gfw.sound.sfx('resource/Sounds/bosshit.wav').play()
 
     def MtoP_hitcheck(self):
         world = gfw.top().world
