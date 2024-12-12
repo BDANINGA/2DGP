@@ -6,7 +6,7 @@ class Monster(AnimSprite):
     def __init__(self, type, x, y, width, height):
         self.type = type
         self.make_monster_status(self.type)
-        super().__init__(self.filename, x + width//2 , y + height//2, spacewidth=0, fps=0)
+        super().__init__(self.filename, x + width//2 , y + height//2, spacewidth=0, fps=10)
         self.ox = self.x
         self.movex = 0
         
@@ -37,22 +37,59 @@ class Monster(AnimSprite):
         self.behavior_tree.run()
         self.collides_floor()
         self.death()
+        if self.changed_state != self.state:
+            self.state_image()
 
     def draw(self):
-        if self.dx > 0:
-            if self.type == 'boss':
+        if self.type == 'boss':
+            if self.dx > 0:
                 self.flip = 'h'
-        elif self.dx < 0:
-            if self.type == 'boss':
+            elif self.dx < 0:
                 self.flip = ' '
-        
-        self.image.composite_draw(0, self.flip, self.x, self.y)
+            super().draw()
+        else:
+            self.image.composite_draw(0, self.flip, self.x, self.y)
 
     def __getstate__(self):
         pass
         
     def setstate(self):
         pass
+
+    def state_image(self):
+        if self.type == 'boss':
+            if self.state == 'wait':
+                self.filename = 'resource/Boss/boss_1_idle.png'
+                self.image = gfw.image.load(self.filename)
+                self.frame_count = 4
+                self.created_on = time.time()
+                self.changed_state = 'wait'
+                self.width = 64
+                self.height = 64
+                self.w, self.h = 64, 64
+                self.spacewidth = 0
+
+            elif self.state == 'run':
+                self.filename = 'resource/Boss/boss_1_walk.png'
+                self.image = gfw.image.load(self.filename)
+                self.frame_count = 8
+                self.created_on = time.time()
+                self.changed_state = 'run'
+                self.width = 64
+                self.height = 64
+                self.w, self.h = 64, 64
+                self.spacewidth = 0
+
+            elif self.state == 'attack':
+                self.filename = 'resource/Boss/boss_1_attack.png'
+                self.image = gfw.image.load(self.filename)
+                self.frame_count = 7
+                self.created_on = time.time()
+                self.changed_state = 'attack'
+                self.width = 74
+                self.height = 64
+                self.w, self.h = 64, 64
+                self.spacewidth = 0
 
     def death(self):
         if self.hp <= 0 or self.y < 0:
@@ -99,7 +136,7 @@ class Monster(AnimSprite):
     def make_monster_status(self, type):
         if (type == 'normal'):
             self.filename = 'resource/몬스터.png'
-            self.hp = 30
+            self.hp = 50
             self.atk = 5
             self.gold = 10
             self.exp = 30
@@ -109,12 +146,15 @@ class Monster(AnimSprite):
             self.dy = 0
             self.atk_period = 0.0
             self.atk_maxperiod = 1
+            self.see = 300
+            self.frame_count = 5
 
             self.state = 'wait'
+            self.changed_state = 'wait'
 
         elif (type == 'boss'):
             self.filename = 'resource/Boss/boss_1_idle.png'
-            self.hp = 3000
+            self.hp = 1000
             self.atk = 50
             self.gold = 100
             self.exp = 300
@@ -125,7 +165,14 @@ class Monster(AnimSprite):
             self.atk_period = 0.0
             self.atk_maxperiod = 1
 
+            self.width = 64
+            self.height = 64
+            self.w, self.h = 64, 64
+            self.spacewidth = 0
+            self.see = 1000
+
             self.state = 'wait'
+            self.changed_state = 'wait'
 
     def make_behavior_tree(self):
         world = gfw.top().world
@@ -216,15 +263,43 @@ class AttackPlayer(Node):
         self.player = player
 
     def run(self):
+        self.monster.state = 'attack'
         self.monster.atk_period += 1 * gfw.frame_time
+        if self.monster.type == 'boss':
+            if self.monster.x < self.player.x:
+                self.monster.flip = 'h'
+            else:
+                self.monster.flip = ' '
         if self.monster.atk_period < self.monster.atk_maxperiod:
+            self.monster.fps = 0
+            self.monster.created_on = time.time()
+            self.attack = False
             return "Running"
         
-        world = gfw.top().world
-        monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
-        world.append(monsterattack, world.layer.monsterattacks)
-        self.monster.atk_period = 0
-        return "Success"
+        self.monster.fps = 10
+        if self.monster.type == 'boss':
+            if self.attack == False:
+                if self.monster.get_anim_index() == 3:
+                    if self.monster.x < self.player.x:
+                        self.monster.flip = ' '
+                    else:
+                        self.monster.flip = 'h'
+                    world = gfw.top().world
+                    monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
+                    world.append(monsterattack, world.layer.monsterattacks)
+                    self.attack = True
+                
+            if self.monster.get_anim_index() == self.monster.frame_count - 1:
+                self.monster.atk_period = 0
+                return "Success"
+            else:
+                return "Running"
+        else:
+            world = gfw.top().world
+            monsterattack = MonsterAttack(self.monster.x, self.monster.y, self.monster.flip, self.monster.atk)
+            world.append(monsterattack, world.layer.monsterattacks)
+            self.monster.atk_period = 0
+            return "Success"
     
 class IsPlayerVisible(Node):
     def __init__(self, monster, player):
@@ -233,7 +308,7 @@ class IsPlayerVisible(Node):
 
     def run(self):
         # 간단히 거리를 기준으로 플레이어를 볼 수 있는지 판단
-        if abs(self.monster.x - self.player.x) < 300 and self.monster.atk_period == 0:
+        if abs(self.monster.x - self.player.x) < self.monster.see and self.monster.atk_period == 0:
             return "Success"
         self.monster.dx = 0
         return "Failure"
@@ -248,6 +323,7 @@ class MoveToPlayer(Node):
             self.monster.dx = 100
         elif self.monster.x > self.player.x:
             self.monster.dx = -100
+        self.monster.state = 'run'
         return "Running" if self.monster.x != self.player.x else "Success"
     
 class Wait(Node):
@@ -263,10 +339,6 @@ class Wait(Node):
             self.wait_time = 0
             self.move_time = 0
             self.monster.dx = 0
-            if self.monster.flip == 'h':
-                self.monster.flip = ' '
-            elif self.monster.flip == ' ':
-                self.monster.flip = 'h'
         
         if self.wait_time > 3:  # 일정 시간 대기 후
             self.move_time += 1 * gfw.frame_time

@@ -36,7 +36,7 @@ class Attack(Sprite):
                 player.state = 'wait' 
         elif self.type == "monsterattack":
             self.MtoP_hitcheck() 
-            if (self.animecount > 30 * gfw.frame_time):
+            if (self.animecount > 70 * gfw.frame_time):
                 world.remove(self, world.layer.monsterattacks)
 
     def PtoM_hitcheck(self):
@@ -79,6 +79,12 @@ class MonsterAttack(Attack):
         super().__init__(monsterx, monstery, monsterflip)
         self.type = "monsterattack"
         self.damage = monsteratk
+        world = gfw.top().world
+        monsters = world.objects_at(world.layer.monster)
+        for monster in monsters:
+            if monster.type == 'boss':
+                self.width = 100
+                self.height = 80
 
 
 class Upperslash(Attack):

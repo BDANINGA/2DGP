@@ -4,7 +4,7 @@ from player import Player
 from attack import PlayerAttack, Upperslash
 from stage import Stage
 
-world = World(['bg','stage', 'floor', 'playerattacks', 'monster', 'monsterattacks', 'item', 'player'])
+world = World(['bg','stage', 'ui', 'floor', 'playerattacks', 'monsterattacks', 'monster', 'item', 'player'])
 
 canvas_width = 1200
 canvas_height = 720 
@@ -15,7 +15,6 @@ global load
 load = 0
 
 def enter():
-
     global stage, player
     
     if load == 1:
@@ -34,8 +33,9 @@ def enter():
         world.append(stage, world.layer.stage)
         world.append(player, world.layer.player)
 
+    world.append(Sprite('resource/UI/hp_bar.png', 100, 500), world.layer.ui)
+    
     # --------------
-    # 보스
     # UI
     # 리소스 구하기
 

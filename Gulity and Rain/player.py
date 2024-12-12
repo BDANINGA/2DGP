@@ -3,6 +3,7 @@ from gfw import *
 
 class Player(AnimSprite):
     def __init__(self):
+        self.w, self.h = 40, 40
         super().__init__('resource/Player/_Idle.png', 200, 100, 40, 10, 10)
         self.width, self.height = 40, 40
         self.dx = 0
@@ -12,6 +13,7 @@ class Player(AnimSprite):
         self.cy = 0
         self.jumpcount = 1
         self.hit_time = 3.0
+        
 
         self.state = 'wait'
         self.changed_state = ' '
