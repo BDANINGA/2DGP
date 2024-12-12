@@ -155,6 +155,7 @@ class Monster(AnimSprite):
         elif (type == 'boss'):
             self.filename = 'resource/Boss/boss_1_idle.png'
             self.hp = 1000
+            self.max_hp = 1000
             self.atk = 50
             self.gold = 100
             self.exp = 300

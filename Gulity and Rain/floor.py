@@ -3,6 +3,7 @@ from gfw import *
 from pico2d import *
 from monster import Monster
 from item import Item
+import ui
 
 class TileMap():
     def __init__(self, tmx_file, tileset_image, tileset_image2):
@@ -70,6 +71,7 @@ class TileMap():
             self.tile_objects.append(layer_objects)
 
         if stage.index == 10:
+            world.append(ui.BossUI('resource/UI/hp_bar2.png', 600, 700, 1100, 20), world.layer.ui)
             world.append(Monster(type='boss', x=1000, y=150, width=40, height=40), world.layer.monster)
 
 def create_tile_object(tile_id, x, y, width, height, tileset_image, tileset_columns):

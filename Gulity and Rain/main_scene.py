@@ -3,6 +3,7 @@ from gfw import *
 from player import Player
 from attack import PlayerAttack, Upperslash
 from stage import Stage
+import ui
 
 world = World(['bg','stage', 'ui', 'floor', 'playerattacks', 'monsterattacks', 'monster', 'item', 'player'])
 
@@ -28,12 +29,12 @@ def enter():
             world.append(stage, world.layer.stage)
             world.append(player, world.layer.player)
     else:
-        stage = Stage(10)
+        stage = Stage(1)
         player = Player()
         world.append(stage, world.layer.stage)
         world.append(player, world.layer.player)
-
-    world.append(Sprite('resource/UI/hp_bar.png', 100, 500), world.layer.ui)
+        
+    world.append(ui.PlayerUI('resource/UI/hp_bar2.png', 300, 600, 500, 30), world.layer.ui)
     
     # --------------
     # UI
