@@ -338,3 +338,4 @@ UI의 구성은 대략 이렇다. 왼쪽 상단에는 레벨, HP와 같은 자�
 ---
 + 1차 발표: [1차 발표 영상](https://youtu.be/jYb6tdUZK7g?si=7oV2OZMaJpzY8354)
 + 2차 발표: [2차 발표 영상](https://www.youtube.com/watch?v=WKfDIfGfr0M)
++ 3차 발표: [최종 발표 영상](https://youtu.be/lecw62rz4nQ?si=YU7ZYgMew-vM5Onj)
